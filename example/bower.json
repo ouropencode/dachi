@@ -1,0 +1,7 @@
+{
+  "name": "dachi",
+  "dependencies": {
+    "radon-ui": "*",
+    "bootstrap": "~3.3.4"
+  }
+}

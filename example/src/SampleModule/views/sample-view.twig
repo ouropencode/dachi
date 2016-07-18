@@ -1,0 +1,4 @@
+<b>Sample name:</b> {{ sample.name }}<br />
+<b>Sample created:</b> {{ sample.created|date('d/m/y H:i') }}
+
+<a href="ajax-test/{{ sample.id }}/delete" class="btn btn-danger ajax confirm_before" data-message="Are you sure you want to delete '{{ sample.name }}'.<br><strong>This action is not reversable.</strong>">delete</a>

@@ -1,0 +1,5 @@
+{
+	"path": "logs",
+	"database": false,
+	"template": false
+}

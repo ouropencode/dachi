@@ -1,0 +1,6 @@
+{
+	"name"   : "dachi_sample",
+	"domain" : false,
+	"secure" : false,
+	"mode"   : "default"
+}

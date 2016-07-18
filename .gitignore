@@ -1,0 +1,7 @@
+*.lock
+cache/
+vendor/
+tests/.test-temp/
+node_modules/
+bower_components/
+build/

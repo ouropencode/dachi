@@ -1,0 +1,6 @@
+{
+	"tag-replacement": [
+		"views/*.twig-default",
+		"src/*/views/*.twig-default"
+	]
+}

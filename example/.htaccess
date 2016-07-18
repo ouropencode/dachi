@@ -1,0 +1,60 @@
+RewriteEngine on
+
+# Set this to the path to the Dachi root
+RewriteBase /packages/dachi
+
+# Folder Ignore Handler
+RewriteRule ^(dist|build)($|/) - [L]
+
+# Main Dachi Handler
+RewriteRule ^(.*)/?$ src/index.php?dachi_uri=$1 [QSA,L]
+
+# Disable File Tagging (this should be commented out on multiple-server configurations)
+FileETag none
+
+# Enable gzip encoding
+<ifModule mod_gzip.c>
+	mod_gzip_on Yes
+	mod_gzip_dechunk Yes
+	mod_gzip_item_include file .(html?|txt|css|js|php|pl)$
+	mod_gzip_item_include handler ^cgi-script$
+	mod_gzip_item_include mime ^text/.*
+	mod_gzip_item_include mime ^application/x-javascript.*
+	mod_gzip_item_exclude mime ^image/.*
+	mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+</ifModule>
+
+# Enable clever caching
+<IfModule mod_expires.c>
+	ExpiresActive on
+
+	ExpiresDefault                          "access plus 1 month"
+	ExpiresByType text/cache-manifest       "access plus 0 seconds"
+	ExpiresByType text/html                 "access plus 0 seconds"
+	ExpiresByType text/xml                  "access plus 0 seconds"
+	ExpiresByType application/xml           "access plus 0 seconds"
+	ExpiresByType application/json          "access plus 0 seconds"
+	ExpiresByType application/rss+xml       "access plus 1 hour"
+	ExpiresByType image/x-icon              "access plus 1 week"
+	ExpiresByType image/gif                 "access plus 1 month"
+	ExpiresByType image/png                 "access plus 1 month"
+	ExpiresByType image/jpg                 "access plus 1 month"
+	ExpiresByType image/jpeg                "access plus 1 month"
+	ExpiresByType video/ogg                 "access plus 1 month"
+	ExpiresByType audio/ogg                 "access plus 1 month"
+	ExpiresByType video/mp4                 "access plus 1 month"
+	ExpiresByType video/webm                "access plus 1 month"
+	ExpiresByType text/x-component          "access plus 1 month"
+	ExpiresByType font/truetype             "access plus 1 month"
+	ExpiresByType font/opentype             "access plus 1 month"
+	ExpiresByType application/x-font-woff   "access plus 1 month"
+	ExpiresByType image/svg+xml             "access plus 1 month"
+	ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
+	ExpiresByType text/css                  "access plus 2 days"
+	ExpiresByType application/javascript    "access plus 2 days"
+	ExpiresByType text/javascript           "access plus 2 days"
+
+	<IfModule mod_headers.c>
+		Header append Cache-Control "public"
+	</IfModule>
+</IfModule>

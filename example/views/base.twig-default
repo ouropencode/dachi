@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href="{{ baseURL }}/" data-assets="{{ assetsURL }}">
+	<meta charset="UTF-8">
+	{% if "<%= environment %>" == "local" %}
+		<link rel="stylesheet" type="text/css" href="build/bower.<%= __versionString %>.css" />
+		<link rel="stylesheet" type="text/css" href="build/default.less.<%= __versionString %>.min.css" />
+	{% else %}
+		<link rel="stylesheet" type="text/css" href="//s3-<%= grunt.aws.region %>.amazonaws.com/<%= grunt.aws.bucket %>/bower.<%= __versionString %>.min.css" />
+		<link rel="stylesheet" type="text/css" href="//s3-<%= grunt.aws.region %>.amazonaws.com/<%= grunt.aws.bucket %>/default.less.<%= __versionString %>.min.css" />
+	{% endif %}
+	<title>Dachi</title>
+</head>
+<body>
+	<div class="header">
+		<h1 class="text-center">Dachi</h1>
+	</div>
+	<div class="container content">
+		<radon-block id="page_content"></radon-block>
+	</div>
+	
+	{% if "<%= environment %>" == "local" %}
+		<script src='build/bower.<%= __versionString %>.min.js'></script>
+		<script src='build/default.<%= __versionString %>.min.js'></script>
+		<script src="//localhost:35729/livereload.js"></script>
+	{% else %}
+		<script src='//s3-<%= grunt.aws.region %>.amazonaws.com/<%= grunt.aws.bucket %>/bower.<%= __versionString %>.min.js'></script>
+		<script src='//s3-<%= grunt.aws.region %>.amazonaws.com/<%= grunt.aws.bucket %>/default.<%= __versionString %>.min.js'></script>
+	{% endif %}
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+	"s3" : {
+		"region" : "eu-west-1",
+		"bucket" : "dachi",
+		"key"    : "XXXXXXXXXXXXXXXXXXXX",                  
+		"secret" : "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	}
+}

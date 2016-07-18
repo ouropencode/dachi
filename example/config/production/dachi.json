@@ -1,0 +1,7 @@
+{
+	"siteName"      : "Dachi",
+	"baseURL"       : "/internal/dachi",
+	"assets"        : "/internal/dachi/build",
+	"domain"        : "dachi.lemondigits.com",
+	"timezone"      : "Europe/London"
+}
