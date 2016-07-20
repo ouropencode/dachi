@@ -1,4 +1,5 @@
 {
 	"mainFiles": {
-	}
+	},
+  "exclude": ["fontawesome", "highlight.js"]
 }
