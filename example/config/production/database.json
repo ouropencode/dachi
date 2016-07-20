@@ -1,4 +1,4 @@
 {
-	"uri": "mysql://root@localhost:3306/dachi?charset=utf8",
+	"uri": "mysql://username:password@host:3306/database?charset=utf8",
 	"cache": "false"
 }

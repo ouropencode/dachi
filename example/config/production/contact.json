@@ -1,7 +1,7 @@
 {
-	"terms"    : "http://dachi.lemondigits.com",
-	"privacy"  : "http://dachi.lemondigits.com",
-	"email"    : "devteam@lemondigits.com",
+	"terms"    : "http://sample.example.org/terms-and-conditions",
+	"privacy"  : "http://sample.example.org/privacy-policy",
+	"email"    : "hello@example.org",
 	"phone"    : "",
 	"facebook" : "",
 	"twitter"  : "",

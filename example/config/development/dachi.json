@@ -1,0 +1,7 @@
+{
+  "siteName"      : "Sample Project",
+  "baseURL"       : "",
+  "assetsURL"     : "https://s3-eu-west-1.amazonaws.com/sample-project-assets-dev/%v",
+  "domain"        : "sample.example.org",
+  "timezone"      : "Europe/London"
+}

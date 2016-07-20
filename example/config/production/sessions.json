@@ -1,5 +1,5 @@
 {
-	"name"   : "dachi_sample",
+	"name"   : "sample-project",
 	"domain" : false,
 	"secure" : false,
 	"mode"   : "default"

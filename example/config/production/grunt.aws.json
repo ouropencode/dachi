@@ -1,0 +1,7 @@
+{
+  "bucket": "sample-project-assets",
+  "region": "eu-west-1",
+  "key"   : "---",
+  "secret": "---",
+  "versioned": true
+}

@@ -1,7 +1,7 @@
 {
 	"private"            : "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 	"subaccount"         : "XXXXXX",
-	
-	"default_from_email" : "contact@lemondigits.com",
-	"default_from_name"  : "Dachi-v2"
+
+	"default_from_email" : "hello@example.org",
+	"default_from_name"  : "Sample Project"
 }

@@ -1,7 +1,7 @@
 {
-	"siteName"      : "Dachi",
-	"baseURL"       : "/internal/dachi",
-	"assets"        : "/internal/dachi/build",
-	"domain"        : "dachi.lemondigits.com",
+	"siteName"      : "Sample Project",
+	"baseURL"       : "",
+	"assets"        : "https://s3-eu-west-1.amazonaws.com/sample-project/%v",
+	"domain"        : "sample.example.org",
 	"timezone"      : "Europe/London"
 }

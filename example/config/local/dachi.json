@@ -1,0 +1,7 @@
+{
+  "siteName" : "Sample Project",
+  "baseURL"  : "",
+  "assetsURL": "/build/%v",
+  "domain"   : "sample.example.org",
+  "timezone" : "Europe/London"
+}
