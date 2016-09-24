@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 	});
 
 	LoadGruntConfig(grunt, {
-		configPath: path.join(process.cwd(), 'vendor', 'ld-packages', 'dachi', 'grunt', 'grunt-tasks'),
+		configPath: path.join(process.cwd(), 'vendor', 'ouropencode', 'dachi', 'grunt', 'grunt-tasks'),
 		data: project_config
 	});
 };
