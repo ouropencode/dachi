@@ -67,7 +67,7 @@ class ModulesCommand extends Command
 		if(strpos($file, "Controller") === false && strpos($file, "Model") === false)
 			return false;
 
-		if(strpos($file, "vendor/ld-packages/dachi/example") === 0)
+		if(strpos($file, "vendor/ouropencode/dachi/example") === 0)
 			return false;
 
 		require_once $file;

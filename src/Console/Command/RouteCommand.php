@@ -60,8 +60,7 @@ class RouteCommand extends Command
 		if(substr($file, -4) !== ".php" || strpos($file, "Controller") === false)
 			return false;
 
-
-		if(strpos($file, "vendor/ld-packages/dachi/example") === 0)
+		if(strpos($file, "vendor/ouropencode/dachi/example") === 0)
 			return false;
 
 		require_once $file;
