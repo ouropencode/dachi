@@ -1,5 +1,5 @@
 # Dachi Web Framework
-Dachi is a PHP web framework created by Lemon Digits Ltd.
+Dachi is a PHP web framework.
 
 # Installation
 
@@ -7,7 +7,7 @@ Dachi is a PHP web framework created by Lemon Digits Ltd.
 2. [Install Composer](https://getcomposer.org/doc/00-intro.md) (for back-end package management)
 3. `npm install -g bower` (for front-end package management)
 4. `npm install -g grunt` (for automation of tasks)
- 
+
 ### Existing Project
 
 **Linux/Mac:** `composer install && vendor/bin/dachi dachi:all`
@@ -20,16 +20,13 @@ To create a new Dachi project just create a `composer.json` file with the follow
 	{
 		"minimum-stability": "dev",
 		"prefer-stable": true,
-		"repositories": [
-			{"type": "composer", "url": "https://packages.services.ld-cdn.com/"}
-		],
 		"autoload": {
 			"psr-4": {
 				"SampleClient\\SampleProject\\": "src/"
 			}
 		},
 		"require": {
-			"ld-packages/dachi": "^2.0"
+			"ouropencode/dachi": "^3.0"
 		}
 	}
 
@@ -50,7 +47,7 @@ Dachi provides a command line tool to help with development.
 
 ## Refresh Everything
 Although most of the commands can be run separately, it is often best to ensure all cache files and internal requirements are correct. You can run all of the required commands using:
-  
+
 **Linux/Mac:** `vendor/bin/dachi dachi:all`
 
 **Windows:** `vendor\bin\dachi dachi:all`
@@ -66,14 +63,14 @@ This will run the following commands:
 
 ## Creating a project
 After installation Dachi does nothing. If you are not using an existing project, you must first create a project using the CLI tool:
-  
+
 **Linux/Mac:** `vendor/bin/dachi dachi:create`
 
 **Windows:** `vendor\bin\dachi dachi:create`
 
 ## Generating Routes
 Before Dachi can route requests, routing information will need to be generated. This is done via the CLI tool:
-  
+
 **Linux/Mac:** `vendor/bin/dachi dachi:route`
 
 **Windows:** `vendor\bin\dachi dachi:route`
@@ -82,7 +79,7 @@ This will generate a `cache/dachi.routes.json` file that is used internally for 
 
 ## Generating Configuration
 Dachi provides many JSON files for configuration. To speed up requests when deployed, these files must be concatenated into a single quick-to-load file. This is done via the CLI tool:
-  
+
 **Linux/Mac:** `vendor/bin/dachi dachi:route`
 
 **Windows:** `vendor\bin\dachi dachi:route`
@@ -91,7 +88,7 @@ This will generate a `cache/dachi.config.json` file that is used internally for 
 
 ## Generating Module Information
 Dachi uses a system to provide features, such as shortcuts, to modules. Shortcuts allow you to use `SampleModule:Model` instead of `SampleClient\SampleProject\SampleModule\Model` in database and templating. This system may be used in future for providing other features to modules. You can generate the modules information file using the CLI:
-  
+
 **Linux/Mac:** `vendor/bin/dachi dachi:modules`
 
 **Windows:** `vendor\bin\dachi dachi:modules`
@@ -100,7 +97,7 @@ This will generate a `cache/dachi.modules.json` file that is used internally for
 
 ## Generating Documentation
 Dachi is completely documented using [ApiGen](http://www.apigen.org). Documentation can be generated using the CLI tool:
-  
+
 **Linux/Mac:** `vendor/bin/dachi dachi:document`
 
 **Windows:** `vendor\bin\dachi dachi:document`

@@ -1,10 +1,7 @@
 {
-	"name": "lemondigits/dachi",
+	"name": "ouropencode/dachi",
 	"version": "3.0.0",
     "bin": ["bin/dachi"],
-	"repositories": [
-		{"type": "composer", "url": "https://packages.services.ld-cdn.com/"}
-	],
 	"autoload": {
 		"psr-4": {
 			"Dachi\\Core\\": "src/",
