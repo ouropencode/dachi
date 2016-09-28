@@ -30,7 +30,7 @@ To create a new Dachi project just create a `composer.json` file with the follow
 		}
 	}
 
-**You should replace `SampleClient\\SampleProject\\` with the correct name-space for your project.**
+**You should replace `SampleClient\\SampleProject\\` with the correct name-space for your project. However, the sample `src/` code will fail once this is changed, so it is advised you change this AFTER you have fiddled with and removed the sample `src/` code**
 
 After creating this file, just run `composer install`. This will then download Dachi and all it's dependencies.
 
