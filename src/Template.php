@@ -12,7 +12,7 @@ namespace Dachi\Core;
 class Template {
 	protected static $twig            = null;
 	protected static $render_actions  = array();
-	protected static $render_template = '@global/base.twig';
+	protected static $render_template = '@global/base';
 
 	/**
 	 * Load the routing information object into memory.
@@ -104,6 +104,7 @@ class Template {
 			$data["domain"]    = Configuration::get("dachi.domain", "localhost");
 			$data["baseURL"]   = Configuration::get("dachi.baseURL", "/");
 			$data["assetsURL"] = str_replace("%v", Kernel::getGitHash(), Configuration::get("dachi.assetsURL", "/build/"));
+			$data["renderTPL"] = self::getRenderTemplate();
 			$data["URI"]       = Request::getFullUri();
 		}
 
@@ -115,6 +116,7 @@ class Template {
 			return json_echo($response);
 		} else if(Request::isAjax()) {
 			$response = array(
+				"render_tpl"     => self::getRenderTemplate(),
 				"data"           => $data,
 				"response"       => Request::getResponseCode(),
 				"render_actions" => self::$render_actions
@@ -124,7 +126,7 @@ class Template {
 		} else {
 			$data["response"] = Request::getResponseCode();
 
-			$response = self::$twig->render(self::getRenderTemplate(), $data);
+			$response = self::$twig->render(self::getRenderTemplate(true), $data);
 
 			foreach(array_reverse(self::$render_actions) as $action) {
 				switch($action["type"]) {
@@ -177,8 +179,8 @@ class Template {
 	 * Retreive the base render template
 	 * @return array
 	 */
-	public static function getRenderTemplate() {
-		return self::$render_template;
+	public static function getRenderTemplate($extension = false) {
+		return self::$render_template . ($extension ? ".twig" : "");
 	}
 
 	/**

@@ -36,17 +36,17 @@ class ControllerRadon extends Controller {
 				fpassthru($file);
 				exit;
 			}
+		}
 
-			if(strpos($template, "@global") !== false) {
-				$basePath = realpath("views");
-				$template = realpath(str_replace("@global", $basePath, $template) . ".twig");
-				if(substr($template, 0, strlen($basePath)) !== $basePath)
-					throw new TemplateNotFoundException;
+		if(strpos($template, "@global") !== false) {
+			$basePath = realpath("views");
+			$template = realpath(str_replace("@global", $basePath, $template) . ".twig");
+			if(substr($template, 0, strlen($basePath)) !== $basePath)
+				throw new TemplateNotFoundException;
 
-				$file = fopen($template, 'rb');
-				fpassthru($file);
-				exit;
-			}
+			$file = fopen($template, 'rb');
+			fpassthru($file);
+			exit;
 		}
 
 		throw new TemplateNotFoundException;
