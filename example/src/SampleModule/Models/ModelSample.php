@@ -1,5 +1,5 @@
 <?php
-namespace SampleClient\SampleProject\SampleModule;
+namespace SampleClient\SampleProject\SampleModule\Models;
 
 use Dachi\Core\Model;
 

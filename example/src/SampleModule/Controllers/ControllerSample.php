@@ -1,5 +1,5 @@
 <?php
-namespace SampleClient\SampleProject\SampleModule;
+namespace SampleClient\SampleProject\SampleModule\Controllers;
 
 use \Dachi\Core\Controller;
 use \Dachi\Core\Request;
