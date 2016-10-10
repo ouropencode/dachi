@@ -1,0 +1,38 @@
+server {
+    listen 80;
+
+    root /var/www/src;
+    index index.html index.htm index.php;
+
+    # Make site accessible from http://set-ip-address.xip.io
+    server_name <%=hostname%>;
+
+    access_log /var/log/nginx/<%=hostname%>-access.log;
+    error_log  /var/log/nginx/<%=hostname%>-error.log error;
+
+    charset utf-8;
+
+    location / {
+		try_files $uri $uri/ /index.php?dachi_uri=$uri&$args;
+    }
+
+    location = /favicon.ico { log_not_found off; access_log off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ ^/index.php(/|$)$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        include fastcgi.conf;
+        fastcgi_param HTTPS off;
+		fastcgi_param PHP_VALUE "include_path=.:/var/www:/usr/share/php:/usr/share/pear";
+    }
+
+    # Deny .htaccess file access
+    location ~ /\.ht {
+        deny all;
+    }
+}

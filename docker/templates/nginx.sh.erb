@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+cd /var/www
+
+vendor/bin/dachi dachi:all
+vendor/bin/doctrine-migrations migrations:migrate
+
+nginx

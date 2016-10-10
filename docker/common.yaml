@@ -1,0 +1,22 @@
+exec: [ "/sbin/my_init" ]
+data_sources: [ defaults, file, environment, environment_json ]
+template_sources: [ file ]
+default_environment: production
+
+environments:
+  production:
+
+defaults:
+  global:
+    hostname: localhost
+  nginx-config.erb:
+    target: /etc/nginx/sites-available/default
+  tail.sh.erb:
+    target: /etc/service/tail/run
+    perms: 0755
+  nginx.sh.erb:
+    target: /etc/service/nginx/run
+    perms: 0755
+  phpfpm.sh.erb:
+    target: /etc/service/phpfpm/run
+    perms: 0755
