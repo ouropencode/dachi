@@ -7,6 +7,6 @@
         }
     },
     "require": {
-        "ouropencode/dachi": "^3"
+        "ouropencode/dachi": "dev-feature/v4"
     }
 }

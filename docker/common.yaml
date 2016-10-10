@@ -5,11 +5,14 @@ default_environment: local
 
 environments:
   production:
-    dachi_environment: production
+    global_values:
+      dachi_environment: production
   development:
-    dachi_environment: development
+    global_values:
+      dachi_environment: development
   local:
-    dachi_environment: local
+    global_values:
+      dachi_environment: local
 
 defaults:
   global:

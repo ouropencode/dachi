@@ -1,6 +1,6 @@
 {
   "siteName" : "Sample Project",
-  "baseURL"  : "/dachi-example",
+  "baseURL"  : "",
   "assetsURL": "/build/%v",
   "domain"   : "sample.example.org",
   "timezone" : "Europe/London"

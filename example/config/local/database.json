@@ -1,4 +1,4 @@
 {
-  "uri": "mysql://root@localhost:3306/dachi-v4?charset=utf8",
+  "uri": "sqlite:///:memory",
   "cache": "false"
 }

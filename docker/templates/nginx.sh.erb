@@ -3,6 +3,6 @@
 cd /var/www
 
 vendor/bin/dachi dachi:all
-vendor/bin/doctrine-migrations migrations:migrate
+vendor/bin/doctrine-migrations migrations:migrate --no-interaction
 
 nginx
