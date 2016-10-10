@@ -1,14 +1,21 @@
 exec: [ "/sbin/my_init" ]
 data_sources: [ defaults, file, environment, environment_json ]
 template_sources: [ file ]
-default_environment: production
+default_environment: local
 
 environments:
   production:
+    dachi_environment: production
+  development:
+    dachi_environment: development
+  local:
+    dachi_environment: local
 
 defaults:
   global:
     hostname: localhost
+  dachi_environment.erb:
+    target: /var/www/dachi_environment
   nginx-config.erb:
     target: /etc/nginx/sites-available/default
   tail.sh.erb:
