@@ -15,8 +15,6 @@ ENV HOME          /root
 ENV PATH          $NVM_DIR/v$NODE_VERSION/bin:$PATH
 ENV tiller_json   '{}'
 
-SHELL ["/bin/bash", "-ci"]
-
 # Get the system ready with some default stuff we'll need
 RUN locale-gen en_US.UTF-8
 RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
@@ -45,10 +43,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 RUN curl -sS https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | \
 	PROFILE=/etc/bash.bashrc bash
 
+SHELL ["/bin/bash", "-ic"]
 RUN nvm install $NODE_VERSION \
 	&& nvm alias default $NODE_VERSION \
 	&& nvm use default \
 	&& npm install -g bower webpack
+SHELL ["/bin/sh", "-c"]
 
 # Configure php and nginx with our basic options
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf; \
@@ -69,10 +69,12 @@ ADD ./package.json /var/www/
 ADD ./bower.json /var/www/
 
 # Install all our dependencies.
+SHELL ["/bin/bash", "-ic"]
 WORKDIR /var/www
 RUN composer install --no-interaction
 RUN npm install
 RUN bower install --allow-root
+SHELL ["/bin/sh", "-c"]
 
 # Copy across the Dachi tiller configuration
 RUN cp -r /var/www/vendor/ouropencode/dachi/docker /etc/tiller
