@@ -7,13 +7,13 @@ namespace Dachi\Core;
  * @version   2.0.0
  * @since     2.0.0
  * @license   LICENCE.md
- * @author    LemonDigits.com <devteam@lemondigits.com>
+ * @author    $ourOpenCode
  */
 class Session {
 
 	/**
 	 * Start a session
-	 * 
+	 *
 	 * @param  string $name The session name
 	 * @param  string $domain The domain this session is attached to. (defaults to php's SERVER_NAME)
 	 * @param  boolean $forceHttps Allow session only via HTTPS (defaults to 'yes if user is currently via HTTPS')
@@ -57,7 +57,7 @@ class Session {
 	 * Has this session moved
 	 *
 	 * Moving is currently defined as "changing user agent".
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public static function hasSessionMoved() {
@@ -83,7 +83,7 @@ class Session {
 	 * Sessions are invalidated 10 seconds after regeneration, this is to allow AJAX
 	 * requests to complete execution before terminating the session. This method will
 	 * return false if the 10 second period has expired.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public static function isValid() {
@@ -105,7 +105,7 @@ class Session {
 	 *
 	 * This method sets the old session to expire in 10 seconds. This allows for any pending
 	 * requests to be served before the session ID changes.
-	 * 
+	 *
 	 * @return null
 	 */
 	public static function regenerate() {

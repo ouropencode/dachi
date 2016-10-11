@@ -11,7 +11,7 @@ namespace Dachi\Core;
  * @version   2.0.0
  * @since     2.0.0
  * @license   LICENCE.md
- * @author    LemonDigits.com <devteam@lemondigits.com>
+ * @author    $ourOpenCode
  */
 class Request {
 	protected static $uri           = array();
@@ -28,7 +28,7 @@ class Request {
 	 * Get a section of the URI
 	 *
 	 * The URI is split by the '/' character.
-	 * 
+	 *
 	 * @param  string $index The index to retrieve
 	 * @param  string $regex The regular expression pattern the index must conform too
 	 * @throws InvalidRequestURIException The specified index was not found or did not conform to the regex.
@@ -54,13 +54,13 @@ class Request {
 	 * Get the whole URI
 	 *
 	 * The URI is split by the '/' character.
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function getFullUri() {
 		if(self::$uri === array() && isset($_GET['dachi_uri']))
 			self::$uri = explode("/", trim($_GET['dachi_uri'], " \t\n\r\0\x0B/"));
-		
+
 		return self::$uri;
 	}
 
@@ -114,7 +114,7 @@ class Request {
 	 * Get an argument passed to the page
 	 *
 	 * This is used for _GET, _POST and _FILES.
-	 * 
+	 *
 	 * @param  string $key     The key to retrieve
 	 * @param  string $default The default value to return if the key was not found
 	 * @param  string $regex   The regular expression pattern the key must conform too
@@ -139,7 +139,7 @@ class Request {
 	 * Get all arguments passed to the page
 	 *
 	 * This is used for _GET, _POST and _FILES.
-	 * 
+	 *
 	 * @return string
 	 */
 	public static function getAllArguments() {
@@ -151,7 +151,7 @@ class Request {
 
 	/**
 	 * Get a value from the user's session
-	 * 
+	 *
 	 * @param  string $key     The key to retrieve
 	 * @param  string $default The default value to return if the key was not found
 	 * @return string
@@ -165,7 +165,7 @@ class Request {
 
 	/**
 	 * Set a value in the user's session
-	 * 
+	 *
 	 * @param  string $key   The key to set
 	 * @param  string $value The value to set
 	 * @return string
@@ -176,7 +176,7 @@ class Request {
 
 	/**
 	 * Get a value from the user's cookie
-	 * 
+	 *
 	 * @param  string $key     The key to retrieve
 	 * @param  string $default The default value to return if the key was not found
 	 * @return string
@@ -271,7 +271,7 @@ class Request {
 	public static function isAjax() {
 		if(Configuration::get("dachi.api-mode", false) == true)
 			return true;
-		
+
 		return (self::getArgument("radon-ui-ajax", "false") == "true");
 	}
 

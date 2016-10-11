@@ -12,7 +12,7 @@ use Dachi\Core\Kernel;
  * @version   2.0.0
  * @since     2.0.0
  * @license   LICENCE.md
- * @author    LemonDigits.com <devteam@lemondigits.com>
+ * @author    $ourOpenCode
  */
 class Configuration {
 	/**
@@ -29,7 +29,7 @@ class Configuration {
 	 * - [a-z.-]+
 	 *
 	 * Under the configuration file nodes the structure is determined by the file itself and can vary.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected static $config = array();
@@ -41,7 +41,7 @@ class Configuration {
 	protected static function load() {
 		self::$config = json_decode(file_get_contents('cache/dachi.config.json'), true);
 	}
-	
+
 	/**
 	 * Get a configuration entry
 	 * @param  string $key     The configuration key to retrieve (e.g. dachi.siteName or api.twitter.publicKey)
