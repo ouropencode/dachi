@@ -58,6 +58,9 @@ class Request {
 	 * @return array
 	 */
 	public static function getFullUri() {
+		if(!isset($_GET['dachi_uri']))
+			$_GET['dachi_uri'] = "";
+			
 		if(self::$uri === array() && isset($_GET['dachi_uri']))
 			self::$uri = explode("/", trim($_GET['dachi_uri'], " \t\n\r\0\x0B/"));
 
