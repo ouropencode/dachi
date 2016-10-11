@@ -2,7 +2,7 @@
 
 cd /var/www
 
-vendor/bin/dachi dachi:all
-vendor/bin/doctrine-migrations migrations:migrate --no-interaction
+sudo -u www-data vendor/bin/dachi dachi:all
+sudo -u www-data vendor/bin/doctrine-migrations migrations:migrate --no-interaction
 
 nginx
