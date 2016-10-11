@@ -1,4 +1,4 @@
 {
-  "uri": "sqlite:///:memory",
+  "uri": "sqlite:///local.sqlite",
   "cache": "false"
 }

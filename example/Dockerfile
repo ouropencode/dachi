@@ -31,18 +31,27 @@ RUN gem1.9.3 install tiller
 RUN curl -sS https://getcomposer.org/installer | php -- \
 	--install-dir=/usr/local/bin --filename=composer
 
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/5.6/fpm/php-fpm.conf
-RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/5.6/fpm/php.ini
-RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/5.6/fpm/php.ini
-RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/5.6/cli/php.ini
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf; \
+	sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/5.6/fpm/php-fpm.conf; \
+	sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/5.6/fpm/php.ini; \
+	sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/5.6/fpm/php.ini; \
+	sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/5.6/cli/php.ini
 
-ADD ./composer.json /var/www/composer.json
+RUN rm -rf /var/www; \
+ 	mkdir -p /var/www; \
+	mkdir -p /var/www/cache; \
+	chown -R www-data.www-data /var/www
 
-RUN cd /var/www && composer install --no-interaction
+ADD ./composer.* /var/www/
+
+RUN echo invalidating cache 0
+
+RUN cd /var/www; \
+	sudo -u www-data composer install --no-interaction; \
+	cp -r /var/www/vendor/ouropencode/dachi/docker /etc/tiller
 
 ADD ./ /var/www
 
-ADD vendor/ouropencode/dachi/docker /etc/tiller
+RUN chown -R www-data.www-data /var/www
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
