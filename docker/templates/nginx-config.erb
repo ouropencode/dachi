@@ -16,6 +16,10 @@ server {
 		try_files $uri $uri/ /index.php?dachi_uri=$uri&$args;
     }
 
+    location /__assets/ {
+		alias /var/www/build/
+    }
+
     location = /favicon.ico { log_not_found off; access_log off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 

@@ -4,7 +4,7 @@ RewriteEngine on
 RewriteBase /dachi-example
 
 # Folder Ignore Handler
-RewriteRule ^(dist|build)($|/) - [L]
+RewriteRule ^(__assets)($|/) - [L]
 
 # Main Dachi Handler
 RewriteRule ^(.*)/?$ src/index.php?dachi_uri=$1 [QSA,L]
