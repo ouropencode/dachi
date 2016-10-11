@@ -9,6 +9,13 @@ use Dachi\Core\Template;
 class View extends Controller {
 
 	/**
+	 * @route-url /
+	 */
+	public function root() {
+		return $this->list_samples();
+	}
+
+	/**
 	 * @route-url /ajax-test
 	 */
 	public function list_samples() {
