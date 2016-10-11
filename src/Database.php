@@ -41,7 +41,7 @@ class Database {
 		$config = Setup::createAnnotationMetadataConfiguration($paths, Configuration::get("debug.database", "false") == "true", "cache", $cache);
 
 		foreach(Modules::getAll() as $module)
-			$config->addEntityNamespace($module->getShortName(), $module->getNamespace() . "\\Models");
+			$config->addEntityNamespace($module->getShortName(), $module->getNamespace());
 
 		self::$entity_manager = EntityManager::create($db_params, $config);
 	}
