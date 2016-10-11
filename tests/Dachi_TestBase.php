@@ -136,7 +136,7 @@ EOT;
 namespace UnitTestNamespace\UnitTestModuleA\Models;
 use Dachi\Core\Model;
 /**
- * @Entity(repositoryClass="RepositoryTest")
+ * @Entity(repositoryClass="TestRepository")
  * @Table(name="test")
  */
 class Test extends Model {

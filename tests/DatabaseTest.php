@@ -9,10 +9,11 @@ class DatabaseTest extends Dachi_TestBase {
 	}
 
 	public function testGetRepository() {
-		include_once "src/UnitTestModuleA/RepositoryTest.php";
-		include_once "src/UnitTestModuleA/ModelTest.php";
+		include_once "src/UnitTestModuleA/Models/TestRepository.php";
+		include_once "src/UnitTestModuleA/Models/Test.php";
 
-		$this->assertInstanceOf('\UnitTestNamespace\UnitTestModuleA\RepositoryTest', Database::getRepository("UnitTestModuleA:ModelTest"));
+		$this->assertInstanceOf('\UnitTestNamespace\UnitTestModuleA\Models\TestRepository',
+			Database::getRepository("UnitTestModuleA:ModelTest"));
 	}
 
 	public function testWrapperMethods() {
