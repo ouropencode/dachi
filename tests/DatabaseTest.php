@@ -13,7 +13,7 @@ class DatabaseTest extends Dachi_TestBase {
 		include_once "src/UnitTestModuleA/Models/Test.php";
 
 		$this->assertInstanceOf('\UnitTestNamespace\UnitTestModuleA\Models\TestRepository',
-			Database::getRepository("UnitTestModuleA:ModelTest"));
+			Database::getRepository("UnitTestModuleA:Test"));
 	}
 
 	public function testWrapperMethods() {
