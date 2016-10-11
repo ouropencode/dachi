@@ -22,8 +22,8 @@ class Template {
 		$loader = new \Twig_Loader_Filesystem();
 
 		foreach(Modules::getAll() as $module)
-			if(file_exists($module->getPath() . '/views'))
-				$loader->addPath($module->getPath() . '/views', $module->getShortName());
+			if(file_exists($module->getPath() . '/Views'))
+				$loader->addPath($module->getPath() . '/Views', $module->getShortName());
 
 		if(file_exists('views'))
 			$loader->addPath('views', 'global');
