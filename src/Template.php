@@ -25,8 +25,10 @@ class Template {
 			if(file_exists($module->getPath() . '/Views'))
 				$loader->addPath($module->getPath() . '/Views', $module->getShortName());
 
-		if(file_exists('views'))
+		if(file_exists('views')) {
 			$loader->addPath('views', 'global');
+			$loader->addPath('views', 'Global');
+		}
 
 		self::$twig = new \Twig_Environment($loader, array(
 			'debug'            => Configuration::get('debug.template', 'false') === 'true',

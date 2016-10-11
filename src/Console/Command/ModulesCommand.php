@@ -66,10 +66,9 @@ class ModulesCommand extends Command
 		if(substr($file, -4) !== ".php")
 			return false;
 
-		if(strpos($file, "Controller") === false &&
-		   strpos($file, "Model") === false &&
-		   strpos($file, "Repository") === false &&
-		   strpos($file, "Migration") === false)
+		if(strpos($file, "Controllers") === false &&
+		   strpos($file, "Models") === false &&
+		   strpos($file, "Repositories") === false)
 			return false;
 
 		/**
@@ -92,19 +91,21 @@ class ModulesCommand extends Command
 			$reflect = new \ReflectionClass($class);
 			if($reflect->isSubclassOf('Dachi\Core\Controller') ||
 			   $reflect->isSubclassOf('Dachi\Core\Model') ||
-			   $reflect->isSubClassOf('Doctrine\ORM\EntityRepository') ||
-			   $reflect->isSubClassOf('Doctrine\DBAL\Migrations\AbstractMigration')) {
+			   $reflect->isSubClassOf('Dachi\Core\Repository')) {
 				$namespace = $reflect->getNamespaceName();
 				$split_namespace = explode('\\', $namespace);
 
-				if(in_array($split_namespace[count($split_namespace) - 1], array("Controllers", "Models", "Views", "Tests", "Repositories")))
+				$filepath = dirname($reflect->getFileName());
+				if(in_array($split_namespace[count($split_namespace) - 1], array("Controllers", "Models", "Views"))) {
 					array_pop($split_namespace);
+						$filepath .= "/..";
+				}
 
 				if(count($split_namespace) > 1) {
 					$module = array();
 					$module["namespace"] = implode('\\', $split_namespace);
 					$module["shortname"] = $split_namespace[count($split_namespace) - 1];
-					$module["path"]      = dirname($reflect->getFileName());
+					$module["path"]      = realpath($filepath);
 
 					$this->modules[$module["namespace"]] = $module;
 					$this->controllers[] = $class;
