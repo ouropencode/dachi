@@ -9,6 +9,6 @@ namespace Dachi\Core;
  * @license   LICENCE.md
  * @author    $ourOpenCode
  */
-class Repository implements \Doctrine\ORM\EntityRepository {
+class Repository extends \Doctrine\ORM\EntityRepository {
 
 }
