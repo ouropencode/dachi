@@ -118,27 +118,28 @@ class Dachi_TestBase extends PHPUnit_Framework_TestCase {
 
 		mkdir("src");
 		mkdir("src/UnitTestModuleA");
+		mkdir("src/UnitTestModuleA/Models");
 		$testRepository = <<<'EOT'
 <?php
-namespace UnitTestNamespace\UnitTestModuleA;
+namespace UnitTestNamespace\UnitTestModuleA\Models;
 
 use Dachi\Core\Database;
 use Doctrine\ORM\EntityRepository;
 
-class RepositoryTest extends EntityRepository {
+class TestRepository extends EntityRepository {
 }
 EOT;
-		file_put_contents('src/UnitTestModuleA/RepositoryTest.php', $testRepository);
+		file_put_contents('src/UnitTestModuleA/Models/TestRepository.php', $testRepository);
 
 		$testModel = <<<'EOT'
 <?php
-namespace UnitTestNamespace\UnitTestModuleA;
+namespace UnitTestNamespace\UnitTestModuleA\Models;
 use Dachi\Core\Model;
 /**
  * @Entity(repositoryClass="RepositoryTest")
  * @Table(name="test")
  */
-class ModelTest extends Model {
+class Test extends Model {
 	/**
 	 * @Id @Column(type="integer") @GeneratedValue
 	 **/
@@ -158,7 +159,7 @@ class ModelTest extends Model {
 	}
 }
 EOT;
-		file_put_contents('src/UnitTestModuleA/ModelTest.php', $testModel);
+		file_put_contents('src/UnitTestModuleA/Models/Test.php', $testModel);
 
 		return parent::run($result);
 	}
