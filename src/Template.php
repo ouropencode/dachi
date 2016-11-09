@@ -7,7 +7,7 @@ namespace Dachi\Core;
  * @version   2.0.0
  * @since     2.0.0
  * @license   LICENCE.md
- * @author    LemonDigits.com <devteam@lemondigits.com>
+ * @author    $ourOpenCode
  */
 class Template {
 	protected static $twig            = null;
@@ -22,11 +22,13 @@ class Template {
 		$loader = new \Twig_Loader_Filesystem();
 
 		foreach(Modules::getAll() as $module)
-			if(file_exists($module->getPath() . '/views'))
-				$loader->addPath($module->getPath() . '/views', $module->getShortName());
+			if(file_exists($module->getPath() . '/Views'))
+				$loader->addPath($module->getPath() . '/Views', $module->getShortName());
 
-		if(file_exists('views'))
+		if(file_exists('views')) {
 			$loader->addPath('views', 'global');
+			$loader->addPath('views', 'Global');
+		}
 
 		self::$twig = new \Twig_Environment($loader, array(
 			'debug'            => Configuration::get('debug.template', 'false') === 'true',

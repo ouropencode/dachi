@@ -7,6 +7,6 @@ namespace Dachi\Core;
  * @version   2.0.0
  * @since     2.0.0
  * @license   LICENCE.md
- * @author    LemonDigits.com <devteam@lemondigits.com>
+ * @author    $ourOpenCode
  */
 class Exception extends \Exception { }

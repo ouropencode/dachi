@@ -24,14 +24,6 @@ class AllCommand extends Command
 			"dachi:modules" => array()
 		);
 
-		$output->writeln("--------------------------------------------------[ NPM INSTALL");
-		$response = shell_exec('npm install');
-		echo $response;
-
-		$output->writeln("--------------------------------------------------[ BOWER INSTALL");
-		$response = shell_exec('bower install');
-		echo $response;
-
 		foreach($commands as $command => $arguments) {
 			$cmd = $this->getApplication()->find($command);
 			$output->writeln("--------------------------------------------------[ " . $command);
@@ -39,11 +31,7 @@ class AllCommand extends Command
 			$cmd_input = new ArrayInput($arguments);
 			$cmd->run($cmd_input, $output);
 		}
-
-		$output->writeln("--------------------------------------------------[ GRUNT");
-		$response = shell_exec('grunt --no-color');
-		echo $response;
-
+		
 		$output->writeln("--------------------------------------------------[ DONE! DONE!");
 	}
 }

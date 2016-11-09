@@ -1,6 +1,6 @@
 {
 	"name": "ouropencode/dachi",
-	"version": "3.1.0",
+	"version": "4.0.0",
     "bin": ["bin/dachi"],
 	"autoload": {
 		"psr-4": {
@@ -22,6 +22,7 @@
 		"mailgun/mailgun-php": "^2.0",
 		"php-http/guzzle6-adapter": "^1.0",
 		"phpmailer/phpmailer": "^5.2",
-		"sendgrid/sendgrid": "^5.0"
+		"sendgrid/sendgrid": "^5.0",
+		"doctrine/migrations": "^1.4"
 	}
 }

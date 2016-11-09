@@ -1,4 +1,4 @@
 {
-  "uri": "mysql://username:password@host:3306/database?charset=utf8",
+  "uri": "sqlite:///local.sqlite",
   "cache": "false"
 }

@@ -54,7 +54,9 @@ class ModulesCommand extends Command
 		$files = array_diff(scandir($directory), array('.', '..'));
 
 		foreach($files as $file) {
-			(is_dir($directory . "/" . $file)) ? $this->processFolder($directory . "/" . $file) : $this->loadFile($directory . "/" . $file);
+			(is_dir($directory . "/" . $file)) ?
+				$this->processFolder($directory . "/" . $file) :
+				$this->loadFile($directory . "/" . $file);
 		}
 
 		return true;
@@ -64,10 +66,19 @@ class ModulesCommand extends Command
 		if(substr($file, -4) !== ".php")
 			return false;
 
-		if(strpos($file, "Controller") === false && strpos($file, "Model") === false)
+		if(strpos($file, "Controllers") === false &&
+		   strpos($file, "Models") === false &&
+		   strpos($file, "Repositories") === false)
 			return false;
 
+		/**
+		 * @todo below we ignore dachi itself and some other composer modules that cause trouble.
+		 *       this should be replaced with something clever to only load tagged 'dachi' extensions?
+		 */
 		if(strpos($file, "vendor/ouropencode/dachi/example") === 0)
+			return false;
+
+		if(strpos($file, "vendor/composer") === 0)
 			return false;
 
 		require_once $file;
@@ -78,15 +89,23 @@ class ModulesCommand extends Command
 
 		foreach($classes as $class) {
 			$reflect = new \ReflectionClass($class);
-			if($reflect->isSubclassOf('Dachi\Core\Controller') || $reflect->isSubclassOf('Dachi\Core\Model')) {
+			if($reflect->isSubclassOf('Dachi\Core\Controller') ||
+			   $reflect->isSubclassOf('Dachi\Core\Model') ||
+			   $reflect->isSubClassOf('Dachi\Core\Repository')) {
 				$namespace = $reflect->getNamespaceName();
 				$split_namespace = explode('\\', $namespace);
 
+				$filepath = dirname($reflect->getFileName());
+				if(in_array($split_namespace[count($split_namespace) - 1], array("Controllers", "Models", "Views"))) {
+					array_pop($split_namespace);
+						$filepath .= "/..";
+				}
+
 				if(count($split_namespace) > 1) {
 					$module = array();
-					$module["namespace"] = $namespace;
+					$module["namespace"] = implode('\\', $split_namespace);
 					$module["shortname"] = $split_namespace[count($split_namespace) - 1];
-					$module["path"]      = dirname($reflect->getFileName());
+					$module["path"]      = realpath($filepath);
 
 					$this->modules[$module["namespace"]] = $module;
 					$this->controllers[] = $class;

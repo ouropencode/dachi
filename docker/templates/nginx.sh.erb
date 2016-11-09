@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+cd /var/www
+
+webpack
+vendor/bin/dachi dachi:all
+vendor/bin/doctrine-migrations migrations:migrate --no-interaction
+
+chown -R www-data.www-data /var/www
+
+nginx

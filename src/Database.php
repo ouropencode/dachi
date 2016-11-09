@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManager;
  * @version   2.0.0
  * @since     2.0.0
  * @license   LICENCE.md
- * @author    LemonDigits.com <devteam@lemondigits.com>
+ * @author    $ourOpenCode
  */
 class Database {
 	protected static $entity_manager = null;
@@ -41,7 +41,7 @@ class Database {
 		$config = Setup::createAnnotationMetadataConfiguration($paths, Configuration::get("debug.database", "false") == "true", "cache", $cache);
 
 		foreach(Modules::getAll() as $module)
-			$config->addEntityNamespace($module->getShortName(), $module->getNamespace());
+			$config->addEntityNamespace($module->getShortName(), $module->getNamespace() . "\\Models");
 
 		self::$entity_manager = EntityManager::create($db_params, $config);
 	}

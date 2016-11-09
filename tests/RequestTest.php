@@ -108,6 +108,13 @@ class RequestTest extends Dachi_TestBase {
 		), Request::getFullUri());
 	}
 
+	public function testGetFullUri_Blank() {
+		$_GET['dachi_uri'] = "";
+		$this->assertEquals(array(""), Request::getFullUri());
+		$_GET['dachi_uri'] = "/";
+		$this->assertEquals(array(""), Request::getFullUri());
+	}
+
 	public function testGetAndSetRenderPath() {
 		Request::setRenderPath("test_path");
 		$this->assertEquals("test_path", Request::getRenderPath());
