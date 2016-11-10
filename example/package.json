@@ -1,13 +1,16 @@
 {
   "devDependencies": {
-    "eventemitter2": "^2.1.3",
-    "webpack": "^1.13.2",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.16.0",
+    "bower-webpack-plugin": "^0.1.9",
     "css-loader": "^0.25.0",
+    "eventemitter2": "^2.1.3",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
-    "style-loader": "^0.13.1"
+    "node-sass": "^3.11.2",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.3"
   }
 }

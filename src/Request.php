@@ -60,7 +60,7 @@ class Request {
 	public static function getFullUri() {
 		if(!isset($_GET['dachi_uri']))
 			$_GET['dachi_uri'] = "";
-			
+
 		if(self::$uri === array() && isset($_GET['dachi_uri']))
 			self::$uri = explode("/", trim($_GET['dachi_uri'], " \t\n\r\0\x0B/"));
 
@@ -275,7 +275,7 @@ class Request {
 		if(Configuration::get("dachi.api-mode", false) == true)
 			return true;
 
-		return (self::getArgument("radon-ui-ajax", "false") == "true");
+		return (self::getArgument("dachi-ui", "false") == "true" || self::getArgument("radon-ui-ajax", "false") == "true");
 	}
 
 	/**
