@@ -69,7 +69,7 @@ class Template {
 	/**
 	 * Append a template render action to the render queue
 	 * @param  string $template  The template file
-	 * @param  string $target_id The radon-block to load into
+	 * @param  string $target_id The dachi-ui-block to load into
 	 * @return null
 	 */
 	public static function display($template, $target_id) {
@@ -137,9 +137,9 @@ class Template {
 							header("Location: " . $action["location"]);
 						break;
 					case "display_tpl":
-						$match = preg_match("/<radon-block id=[\"']" . preg_quote($action["target_id"]) . "[\"'][^>]*>([\s\S]*)<\/radon-block>/U", $response, $matches);
+						$match = preg_match("/<dachi-ui-block id=[\"']" . preg_quote($action["target_id"]) . "[\"'][^>]*>([\s\S]*)<\/dachi-ui-block>/U", $response, $matches);
 						if($match) {
-							$replacement = "<radon-block id='" . $action["target_id"] . "'>" . self::$twig->render($action["template"] . '.twig', $data) . "</radon-block>";
+							$replacement = "<dachi-ui-block id='" . $action["target_id"] . "'>" . self::$twig->render($action["template"] . '.twig', $data) . "</dachi-ui-block>";
 							$response = str_replace($matches[0], $replacement, $response);
 						}
 						break;
