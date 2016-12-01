@@ -161,6 +161,20 @@ class Database {
 
 		return call_user_func_array(array(self::$entity_manager, "createQueryBuilder"), func_get_args());
 	}
+	/**
+	* Wrapper to the Doctrine2 createQueryBuilder function.
+	*
+	* This function will call the 'createNativeQuery' function on the Doctrine2 Entity Manager.
+	*
+	* @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html
+	* @return mixed
+	*/
+	public static function createNativeQuery() {
+		if(self::$entity_manager == null)
+				self::initialize();
+
+	return call_user_func_array(array(self::$entity_manager, "createNativeQuery"), func_get_args());
+	}
 
 	/**
 	 * Wrapper to the Doctrine2 getReference function.
