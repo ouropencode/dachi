@@ -45,6 +45,10 @@ class Template {
 			if($date == "now") $date = new \DateTime();
 			return $date->format('Y-m-d');
 		}));
+		self::$twig->addFilter(new \Twig_SimpleFilter('date_long', function($date) {
+			if($date == "now") $date = new \DateTime();
+			return $date->format('jS F Y');
+		}));
 		self::$twig->addFilter(new \Twig_SimpleFilter('date_uk', function($date) {
 			if($date == "now") $date = new \DateTime();
 			return $date->format('d/m/Y');
