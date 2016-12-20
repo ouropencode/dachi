@@ -43,6 +43,17 @@ class Database {
 		foreach(Modules::getAll() as $module)
 			$config->addEntityNamespace($module->getShortName(), $module->getNamespace());
 
+		foreach(Configuration::get("database.dql-extensions", array()) as $extension) {
+			if($extension["type"] == "datetime")
+				$config->addCustomDatetimeFunction($extension["name"], $extension["handler"]);
+
+			if($extension["type"] == "numeric")
+				$config->addCustomNumericFunction($extension["name"], $extension["handler"]);
+
+			if($extension["type"] == "string")
+				$config->addCustomStringFunction($extension["name"], $extension["handler"]);
+		}
+
 		self::$entity_manager = EntityManager::create($db_params, $config);
 	}
 
@@ -161,7 +172,7 @@ class Database {
 
 		return call_user_func_array(array(self::$entity_manager, "createQueryBuilder"), func_get_args());
 	}
-	
+
 	/**
 	 * Wrapper to the Doctrine2 createNativeQuery function.
 	 *
