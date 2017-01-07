@@ -54,6 +54,106 @@ class Template {
 			return $date->format('d/m/Y');
 		}));
 		self::$twig->getExtension('core')->setDateFormat('Y-m-d H:i');
+
+		$sort_filter = function($value, $key, $direction, $absolute, $natural) {
+			usort($value, function($a, $b) use ($key, $direction, $absolute, $natural) {
+				if($key) {
+					$a = $a[$key];
+					$b = $b[$key];
+				}
+
+				if($absolute) {
+					$a = abs($a);
+					$b = abs($b);
+				}
+
+				if($direction == "desc" || $direction === true) {
+					if($natural)
+						return strnatcmp($b, $a);
+
+					if($a == $b) return 0;
+					return $a > $b ? -1 : 1;
+				}
+
+				if($direction == "asc") {
+					if($natural)
+						return strnatcmp($a, $b);
+
+					if($a == $b) return 0;
+					return $a > $b ? 1 : -1;
+				}
+
+				return 0;
+			});
+			return $value;
+		};
+
+		/**
+		 * $test = array(
+	     *   array("value" => 3),
+	     *   array("value" => 1),
+	     *   array("value" => 2),
+	     *   array("value" => 5),
+	     *   array("value" => 4),
+	     *   array("value" => -3),
+	     *   array("value" => -1),
+	     *   array("value" => -2),
+	     *   array("value" => -5),
+	     *   array("value" => -4)
+	     * );
+	     *
+	     * (the zero argument versions only work on simple arrays!)
+	     *
+	     * | sort([key, direction, absolute, natural])
+	     * | sort()                                          [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
+	     * | sort("value", "asc")                            [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
+	     * | sort("value", "desc")                           [5, 4, 3, 2, 1, -1, -2, -3, -4, -5]
+	     * | sort("value", true)                             [5, 4, 3, 2, 1, -1, -2, -3, -4, -5]
+	     * | sort("value", "asc", true)                      [-1, 1, -2, 2, -3, 3, -4, 4, 5, -5]
+	     * | sort("value", "asc", true, true)                [-1, 1, -2, 2, -3, 3, -4, 4, 5, -5]
+	     * | sort("value", "asc", false, true)               [-1, -2, -3, -4, -5, 1, 2, 3, 4, 5]
+	     *
+	     * | sortabs([key, direction])
+	     * | sortabs()                                       [-1, 1, -2, 2, -3, 3, -4, 4, 5, -5]
+	     * | sortabs("value", "asc")                         [-1, 1, -2, 2, -3, 3, -4, 4, 5, -5]
+	     * | sortabs("value", "desc")                        [5, -5, -4, 4, -3, 3, 2, -2, 1, -1]
+	     *
+	     * | natsort([key, direction])
+	     * | natsort()                                       [-1, -2, -3, -4, -5, 1, 2, 3, 4, 5]
+	     * | natsort("value", "asc")                         [-1, -2, -3, -4, -5, 1, 2, 3, 4, 5]
+	     * | natsort("value", "desc")                        [5, 4, 3, 2, 1, -5, -4, -3, -2, -1]
+	     *
+	     * | natsortabs([key, direction])
+	     * | natsortabs()                                    [-1, 1, -2, 2, -3, 3, -4, 4, 5, -5]
+	     * | natsortabs("value", "asc")                      [-1, 1, -2, 2, -3, 3, -4, 4, 5, -5]
+	     * | natsortabs("value", "desc")                     [5, -5, -4, 4, -3, 3, 2, -2, 1, -1]
+		 */
+
+		self::$twig->addFilter(new \Twig_SimpleFilter("sort", function ($value, array $options = array()) use ($sort_filter) {
+			$key       = isset($options[0]) ? $options[0] : null;
+			$direction = isset($options[1]) ? $options[1] : "asc";
+			$absolute  = isset($options[2]) ? $options[2] : false;
+			$natural   = isset($options[3]) ? $options[3] : false;
+			return $sort_filter($value, $key, $direction, $absolute, $natural);
+		}, array('is_variadic' => true)));
+
+		self::$twig->addFilter(new \Twig_SimpleFilter("natsort", function ($value, array $options = array()) use ($sort_filter) {
+			$key       = isset($options[0]) ? $options[0] : null;
+			$direction = isset($options[1]) ? $options[1] : "asc";
+			return $sort_filter($value, $key, $direction, false, true);
+		}, array('is_variadic' => true)));
+
+		self::$twig->addFilter(new \Twig_SimpleFilter("sortabs", function ($value, array $options = array()) use ($sort_filter) {
+			$key       = isset($options[0]) ? $options[0] : null;
+			$direction = isset($options[1]) ? $options[1] : "asc";
+			return $sort_filter($value, $key, $direction, true, false);
+		}, array('is_variadic' => true)));
+
+		self::$twig->addFilter(new \Twig_SimpleFilter("natsortabs", function ($value, array $options = array()) use ($sort_filter) {
+			$key       = isset($options[0]) ? $options[0] : null;
+			$direction = isset($options[1]) ? $options[1] : "asc";
+			return $sort_filter($value, $key, $direction, true, true);
+		}, array('is_variadic' => true)));
 	}
 
 	/**
