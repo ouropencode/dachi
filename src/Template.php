@@ -56,6 +56,32 @@ class Template {
 			return $date->format('d/m/Y');
 		}));
 		self::$twig->getExtension('core')->setDateFormat('Y-m-d H:i');
+		
+		self::$twig->addFilter(new \Twig_SimpleFilter("sortasc_*", function ($key, $data) {
+			usort($data, function($a, $b) use ($key) {
+				return strnatcmp($a[$key], $b[$key]);
+			});
+			return $data;
+		}));
+
+		self::$twig->addFilter(new \Twig_SimpleFilter("sortdesc_*", function ($key, $data) {
+			usort($data, function($a, $b) use ($key) {
+				return strnatcmp($b[$key], $a[$key]);
+			});
+			return $data;
+		}));
+		self::$twig->addFilter(new \Twig_SimpleFilter("abssortasc_*", function ($key, $data) {
+			usort($data, function($a, $b) use ($key) {
+				return strnatcmp(abs($a[$key]), abs($b[$key]));
+			});
+			return $data;
+		}));
+		self::$twig->addFilter(new \Twig_SimpleFilter("abssortdesc_*", function ($key, $data) {
+			usort($data, function($a, $b) use ($key) {
+				return strnatcmp(abs($b[$key]), abs($a[$key]));
+			});
+			return $data;
+		}));
 	}
 
 	/**
