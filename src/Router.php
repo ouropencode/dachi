@@ -89,7 +89,11 @@ class Router {
 
 		if(!Request::isAjax() && !Request::isAPI() && isset($route["render-path"])) {
 			Request::setRenderPath($route["render-path"]);
-			$route = self::findRoute(explode('/', $route["render-path"]));
+			try {
+				$route = self::findRoute(explode('/', $route["render-path"]));
+			} catch(ValidRouteNotFoundException $e) {
+				throw new ValidRenderRouteNotFoundException($e);
+			}
 			$response = self::performRoute($route);
 		}
 
@@ -109,3 +113,4 @@ class Router {
  * @author    LemonDigits.com <devteam@lemondigits.com>
  */
 class ValidRouteNotFoundException extends \Dachi\Core\Exception { }
+class ValidRenderRouteNotFoundException extends \Dachi\Core\Exception { }
