@@ -1,229 +1,256 @@
 <?php
+
 namespace Dachi\Tests;
 
 use Dachi\Core\Request;
 
-class RequestTest extends Dachi_TestBase {
+class RequestTest extends Dachi_TestBase
+{
+    public function testGetUriAtIntegerIndexWithoutRegex()
+    {
+        $_GET['dachi_uri'] = '/part_one/part_two/part_three/part_four/part_five';
 
-	public function testGetUriAtIntegerIndexWithoutRegex() {
-		$_GET['dachi_uri'] = "/part_one/part_two/part_three/part_four/part_five";
+        $this->assertEquals('part_one', Request::getUri(0));
+        $this->assertEquals('part_two', Request::getUri(1));
+        $this->assertEquals('part_three', Request::getUri(2));
+        $this->assertEquals('part_four', Request::getUri(3));
+        $this->assertEquals('part_five', Request::getUri(4));
+    }
 
-		$this->assertEquals("part_one",   Request::getUri(0));
-		$this->assertEquals("part_two",   Request::getUri(1));
-		$this->assertEquals("part_three", Request::getUri(2));
-		$this->assertEquals("part_four",  Request::getUri(3));
-		$this->assertEquals("part_five",  Request::getUri(4));
-	}
+    public function testGetUriAtIntegerIndexWithRegex()
+    {
+        $_GET['dachi_uri'] = '/part_one/part_two/part_three/part_four/part_five';
 
-	public function testGetUriAtIntegerIndexWithRegex() {
-		$_GET['dachi_uri'] = "/part_one/part_two/part_three/part_four/part_five";
+        $this->assertEquals('part_one', Request::getUri(0, 'part_[a-z]+'));
+        $this->assertEquals('part_two', Request::getUri(1, 'part_[a-z]+'));
+        $this->assertEquals('part_three', Request::getUri(2, 'part_[a-z]+'));
+        $this->assertEquals('part_four', Request::getUri(3, 'part_[a-z]+'));
+        $this->assertEquals('part_five', Request::getUri(4, 'part_[a-z]+'));
+    }
 
-		$this->assertEquals("part_one",   Request::getUri(0, "part_[a-z]+"));
-		$this->assertEquals("part_two",   Request::getUri(1, "part_[a-z]+"));
-		$this->assertEquals("part_three", Request::getUri(2, "part_[a-z]+"));
-		$this->assertEquals("part_four",  Request::getUri(3, "part_[a-z]+"));
-		$this->assertEquals("part_five",  Request::getUri(4, "part_[a-z]+"));
-	}
+    /**
+     * @expectedException Dachi\Core\InvalidRequestURIException
+     */
+    public function testGetUriAtIntegerIndexInvalidRegex()
+    {
+        $_GET['dachi_uri'] = '/part_one';
+        Request::getUri(0, 'part_[0-9]+');
+    }
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestURIException
-	 */
-	public function testGetUriAtIntegerIndexInvalidRegex() {
-		$_GET['dachi_uri'] = "/part_one";
-		Request::getUri(0, "part_[0-9]+");
-	}
+    /**
+     * @expectedException Dachi\Core\InvalidRequestURIException
+     */
+    public function testGetInvalidUriAtIntegerIndex()
+    {
+        $_GET['dachi_uri'] = '/';
+        Request::getUri(1);
+    }
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestURIException
-	 */
-	public function testGetInvalidUriAtIntegerIndex() {
-		$_GET['dachi_uri'] = "/";
-		Request::getUri(1);
-	}
+    public function testGetUriAtStringIndexWithoutRegex()
+    {
+        $_GET['dachi_uri'] = '/part_one/part_two/part_three/part_four/part_five';
 
-	public function testGetUriAtStringIndexWithoutRegex() {
-		$_GET['dachi_uri'] = "/part_one/part_two/part_three/part_four/part_five";
+        Request::setRequestVariables([
+            [0, 'test_one'],
+            [1, 'test_two'],
+            [2, 'test_three'],
+            [3, 'test_four'],
+            [4, 'test_five'],
+        ]);
 
-		Request::setRequestVariables(array(
-			array(0, "test_one"),
-			array(1, "test_two"),
-			array(2, "test_three"),
-			array(3, "test_four"),
-			array(4, "test_five")
-		));
+        $this->assertEquals('part_one', Request::getUri('test_one'));
+        $this->assertEquals('part_two', Request::getUri('test_two'));
+        $this->assertEquals('part_three', Request::getUri('test_three'));
+        $this->assertEquals('part_four', Request::getUri('test_four'));
+        $this->assertEquals('part_five', Request::getUri('test_five'));
+    }
 
+    public function testGetUriAtStringIndexWithRegex()
+    {
+        $_GET['dachi_uri'] = '/part_one/part_two/part_three/part_four/part_five';
 
-		$this->assertEquals("part_one",   Request::getUri("test_one"));
-		$this->assertEquals("part_two",   Request::getUri("test_two"));
-		$this->assertEquals("part_three", Request::getUri("test_three"));
-		$this->assertEquals("part_four",  Request::getUri("test_four"));
-		$this->assertEquals("part_five",  Request::getUri("test_five"));
-	}
+        Request::setRequestVariables([
+            [0, 'test_one'],
+            [1, 'test_two'],
+            [2, 'test_three'],
+            [3, 'test_four'],
+            [4, 'test_five'],
+        ]);
 
-	public function testGetUriAtStringIndexWithRegex() {
-		$_GET['dachi_uri'] = "/part_one/part_two/part_three/part_four/part_five";
+        $this->assertEquals('part_one', Request::getUri('test_one', 'part_[a-z]+'));
+        $this->assertEquals('part_two', Request::getUri('test_two', 'part_[a-z]+'));
+        $this->assertEquals('part_three', Request::getUri('test_three', 'part_[a-z]+'));
+        $this->assertEquals('part_four', Request::getUri('test_four', 'part_[a-z]+'));
+        $this->assertEquals('part_five', Request::getUri('test_five', 'part_[a-z]+'));
+    }
 
-		Request::setRequestVariables(array(
-			array(0, "test_one"),
-			array(1, "test_two"),
-			array(2, "test_three"),
-			array(3, "test_four"),
-			array(4, "test_five")
-		));
+    /**
+     * @expectedException Dachi\Core\InvalidRequestURIException
+     */
+    public function testGetUriAtStringIndexInvalidRegex()
+    {
+        $_GET['dachi_uri'] = '/part_one';
 
-		$this->assertEquals("part_one",   Request::getUri("test_one",   "part_[a-z]+"));
-		$this->assertEquals("part_two",   Request::getUri("test_two",   "part_[a-z]+"));
-		$this->assertEquals("part_three", Request::getUri("test_three", "part_[a-z]+"));
-		$this->assertEquals("part_four",  Request::getUri("test_four",  "part_[a-z]+"));
-		$this->assertEquals("part_five",  Request::getUri("test_five",  "part_[a-z]+"));
-	}
+        Request::setRequestVariables([
+            [0, 'test_one'],
+        ]);
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestURIException
-	 */
-	public function testGetUriAtStringIndexInvalidRegex() {
-		$_GET['dachi_uri'] = "/part_one";
+        Request::getUri('test_one', 'part_[0-9]+');
+    }
 
-		Request::setRequestVariables(array(
-			array(0, "test_one")
-		));
+    /**
+     * @expectedException Dachi\Core\InvalidRequestURIException
+     */
+    public function testGetInvalidUriAtStringIndex()
+    {
+        $_GET['dachi_uri'] = '/';
+        Request::getUri('invalid_part');
+    }
 
-		Request::getUri("test_one", "part_[0-9]+");
-	}
+    public function testGetFullUri()
+    {
+        $_GET['dachi_uri'] = '/part_one/part_two/part_three/part_four/part_five';
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestURIException
-	 */
-	public function testGetInvalidUriAtStringIndex() {
-		$_GET['dachi_uri'] = "/";
-		Request::getUri("invalid_part");
-	}
+        $this->assertEquals([
+            'part_one', 'part_two', 'part_three',
+            'part_four', 'part_five',
+        ], Request::getFullUri());
+    }
 
-	public function testGetFullUri() {
-		$_GET['dachi_uri'] = "/part_one/part_two/part_three/part_four/part_five";
+    public function testGetFullUri_Blank()
+    {
+        $_GET['dachi_uri'] = '';
+        $this->assertEquals([''], Request::getFullUri());
+        $_GET['dachi_uri'] = '/';
+        $this->assertEquals([''], Request::getFullUri());
+    }
 
-		$this->assertEquals(array(
-			"part_one", "part_two", "part_three",
-			"part_four", "part_five"
-		), Request::getFullUri());
-	}
+    public function testGetAndSetRenderPath()
+    {
+        Request::setRenderPath('test_path');
+        $this->assertEquals('test_path', Request::getRenderPath());
+    }
 
-	public function testGetFullUri_Blank() {
-		$_GET['dachi_uri'] = "";
-		$this->assertEquals(array(""), Request::getFullUri());
-		$_GET['dachi_uri'] = "/";
-		$this->assertEquals(array(""), Request::getFullUri());
-	}
+    public function testGetArgument()
+    {
+        $_GET['test_get'] = 'get_test';
+        $_POST['test_post'] = 'post_test';
+        $_FILES['test_files'] = 'files_test';
 
-	public function testGetAndSetRenderPath() {
-		Request::setRenderPath("test_path");
-		$this->assertEquals("test_path", Request::getRenderPath());
-	}
+        $this->assertEquals('get_test', Request::getArgument('test_get'));
+        $this->assertEquals('post_test', Request::getArgument('test_post'));
+        $this->assertEquals('files_test', Request::getArgument('test_files'));
+    }
 
-	public function testGetArgument() {
-		$_GET['test_get']     = 'get_test';
-		$_POST['test_post']   = 'post_test';
-		$_FILES['test_files'] = 'files_test';
+    public function testGetArgumentDefault()
+    {
+        $this->assertEquals('default', Request::getArgument('test'));
 
-		$this->assertEquals("get_test",   Request::getArgument("test_get"));
-		$this->assertEquals("post_test",  Request::getArgument("test_post"));
-		$this->assertEquals("files_test", Request::getArgument("test_files"));
-	}
+        $this->assertEquals('custom_default', Request::getArgument('test', 'custom_default'));
+    }
 
-	public function testGetArgumentDefault() {
-		$this->assertEquals("default", Request::getArgument("test"));
+    public function testGetArgumentRegex()
+    {
+        $_GET['test_get'] = 'get_test';
+        $this->assertEquals('get_test', Request::getArgument('test_get', null, 'get_[a-z]+'));
+    }
 
-		$this->assertEquals("custom_default", Request::getArgument("test",   "custom_default"));
-	}
+    /**
+     * @expectedException Dachi\Core\InvalidRequestArgumentException
+     */
+    public function testGetArgumentInvalidRegex()
+    {
+        $_GET['test_get'] = 'get_test';
+        $this->assertEquals('get_test', Request::getArgument('test_get', null, 'get_[0-9]+'));
+    }
 
-	public function testGetArgumentRegex() {
-		$_GET['test_get'] = 'get_test';
-		$this->assertEquals("get_test", Request::getArgument("test_get", null, "get_[a-z]+"));
-	}
+    public function testGetSession()
+    {
+        $_SESSION['test_sess'] = 'sess_test';
+        $this->assertEquals('sess_test', Request::getSession('test_sess'));
+    }
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestArgumentException
-	 */
-	public function testGetArgumentInvalidRegex() {
-		$_GET['test_get'] = 'get_test';
-		$this->assertEquals("get_test", Request::getArgument("test_get", null, "get_[0-9]+"));
-	}
+    public function testGetSessionDefault()
+    {
+        $this->assertEquals('default', Request::getSession('test_sess'));
 
-	public function testGetSession() {
-		$_SESSION['test_sess'] = 'sess_test';
-		$this->assertEquals("sess_test", Request::getSession("test_sess"));
-	}
+        $this->assertEquals('custom_default', Request::getSession('test_sess', 'custom_default'));
+    }
 
-	public function testGetSessionDefault() {
-		$this->assertEquals("default", Request::getSession("test_sess"));
+    public function testSetSession()
+    {
+        Request::setSession('test_sess', 'sess_test');
+        $this->assertEquals('sess_test', $_SESSION['test_sess']);
+    }
 
-		$this->assertEquals("custom_default", Request::getSession("test_sess", "custom_default"));
-	}
+    public function testGetCookie()
+    {
+        $_COOKIE['test_cookie'] = 'cookie_test';
+        $this->assertEquals('cookie_test', Request::getCookie('test_cookie'));
+    }
 
-	public function testSetSession() {
-		Request::setSession("test_sess", "sess_test");
-		$this->assertEquals("sess_test", $_SESSION['test_sess']);
-	}
+    public function testSetCookie()
+    {
+        $success = Request::setCookie('test_cookie', 'cookie_test', -1, '/', null);
+        $this->assertEquals(true, $success);
+    }
 
-	public function testGetCookie() {
-		$_COOKIE['test_cookie'] = "cookie_test";
-		$this->assertEquals("cookie_test", Request::getCookie("test_cookie"));
-	}
+    public function testGetAndSetData()
+    {
+        Request::setData('test_data', 'data_test');
+        $this->assertEquals('data_test', Request::getData('test_data'));
+    }
 
-	public function testSetCookie() {
-		$success = Request::setCookie("test_cookie", "cookie_test", -1, "/", null);
-		$this->assertEquals(true, $success);
-	}
+    public function testHasData()
+    {
+        Request::setData('test_data', 'data_test');
+        $this->assertEquals(true, Request::hasData('test_data'));
+    }
 
-	public function testGetAndSetData() {
-		Request::setData("test_data", "data_test");
-		$this->assertEquals("data_test", Request::getData("test_data"));
-	}
+    public function testGetAllData()
+    {
+        Request::setData('test_dataA', 'data_testA');
+        Request::setData('test_dataB', 'data_testB');
+        Request::setData('test_dataC', 'data_testC');
 
-	public function testHasData() {
-		Request::setData("test_data", "data_test");
-		$this->assertEquals(true, Request::hasData("test_data"));
-	}
+        $this->assertEquals([
+            'test_dataA' => 'data_testA',
+            'test_dataB' => 'data_testB',
+            'test_dataC' => 'data_testC',
+        ], Request::getAllData());
+    }
 
-	public function testGetAllData() {
-		Request::setData("test_dataA", "data_testA");
-		Request::setData("test_dataB", "data_testB");
-		Request::setData("test_dataC", "data_testC");
+    public function testDefaultResponseCode()
+    {
+        $this->assertEquals([
+            'status'  => 'assumed',
+            'message' => 'Assuming successful.',
+        ], Request::getResponseCode());
+    }
 
-		$this->assertEquals(array(
-			"test_dataA" => "data_testA",
-			"test_dataB" => "data_testB",
-			"test_dataC" => "data_testC"
-		), Request::getAllData());
-	}
+    public function testGetAndSetResponseCode()
+    {
+        Request::setResponseCode('success', 'test success');
+        $this->assertEquals([
+            'status'  => 'success',
+            'message' => 'test success',
+        ], Request::getResponseCode());
 
-	public function testDefaultResponseCode() {
-		$this->assertEquals(array(
-			"status" => "assumed",
-			"message" => "Assuming successful."
-		), Request::getResponseCode());
-	}
+        Request::setResponseCode('error', 'test error');
+        $this->assertEquals([
+            'status'  => 'error',
+            'message' => 'test error',
+        ], Request::getResponseCode());
+    }
 
-	public function testGetAndSetResponseCode() {
-		Request::setResponseCode("success", "test success");
-		$this->assertEquals(array(
-			"status" => "success",
-			"message" => "test success"
-		), Request::getResponseCode());
+    public function testIsAjaxViaNonAjax()
+    {
+        $this->assertEquals(false, Request::isAjax());
+    }
 
-		Request::setResponseCode("error", "test error");
-		$this->assertEquals(array(
-			"status" => "error",
-			"message" => "test error"
-		), Request::getResponseCode());
-	}
-
-	public function testIsAjaxViaNonAjax() {
-		$this->assertEquals(false, Request::isAjax());
-	}
-
-	public function testIsAjaxViaAjax() {
-		$_GET['radon-ui-ajax'] = "true";
-		$this->assertEquals(true, Request::isAjax());
-	}
+    public function testIsAjaxViaAjax()
+    {
+        $_GET['radon-ui-ajax'] = 'true';
+        $this->assertEquals(true, Request::isAjax());
+    }
 }

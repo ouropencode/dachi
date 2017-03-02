@@ -1,42 +1,42 @@
 <?php
+
 namespace Dachi\Helpers;
 
-use Dachi\Core\Configuration;
-use Dachi\Core\Template;
-use Dachi\Core\Kernel;
+abstract class EMail extends \Dachi\Core\Helper
+{
+    public static function initalize()
+    {
+    }
 
-use PHPMailer;
+    public static function send($options)
+    {
+    }
 
-abstract class EMail extends \Dachi\Core\Helper {
+    protected static function tempdir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000)
+    {
+        if (is_null($dir)) {
+            $dir = sys_get_temp_dir();
+        }
 
-	public static function initalize() {
+        $dir = rtrim($dir, '/');
 
-	}
+        if (!is_dir($dir) || !is_writable($dir)) {
+            return false;
+        }
 
-	public static function send($options) {
+        if (strpbrk($prefix, '\\/:*?"<>|') !== false) {
+            return false;
+        }
 
-	}
+        $attempts = 0;
+        do {
+            $path = sprintf('%s/%s%s', $dir, $prefix, mt_rand(100000, mt_getrandmax()));
+        } while (!mkdir($path, $mode) && $attempts++ < $maxAttempts);
 
-	protected static function tempdir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000) {
-		if (is_null($dir))
-			$dir = sys_get_temp_dir();
-
-		$dir = rtrim($dir, '/');
-
-		if (!is_dir($dir) || !is_writable($dir))
-			return false;
-
-		if (strpbrk($prefix, '\\/:*?"<>|') !== false)
-			return false;
-
-		$attempts = 0;
-		do {
-			$path = sprintf('%s/%s%s', $dir, $prefix, mt_rand(100000, mt_getrandmax()));
-		} while (!mkdir($path, $mode) && $attempts++ < $maxAttempts);
-
-		return $path;
-	}
-
+        return $path;
+    }
 }
 
-class MailHelperException extends \Exception { }
+class MailHelperException extends \Exception
+{
+}
