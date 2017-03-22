@@ -43,35 +43,35 @@ class Router {
 	 * @throws ValidRouteNotFoundException
 	 * @return array
 	 */
-	  public static function findRoute($uri) {
-	    if(self::$routes === array())
-	      self::load();
+	public static function findRoute($uri) {
+		if(self::$routes === array())
+			self::load();
 
-	    $count = count($uri);
+		$count = count($uri);
 
-	    $position = &self::$routes;
-	    for($i = 0; $i < $count; $i++) {
-	      if($i == $count - 1) {
-		if(isset($position[$uri[$i]]) && isset($position[$uri[$i]]["route"])) {
-		  return $position[$uri[$i]]["route"];
-		} else if(isset($position["*"]) && isset($position["*"]["route"])) {
-		  return $position["*"]["route"];
-		} else {
-		  throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
+		$position = &self::$routes;
+		for($i = 0; $i < $count; $i++) {
+			if($i == $count - 1) {
+				if(isset($position[$uri[$i]]) && isset($position[$uri[$i]]["route"])) {
+					return $position[$uri[$i]]["route"];
+				} else if(isset($position["*"]) && isset($position["*"]["route"])) {
+					return $position["*"]["route"];
+				} else {
+					throw new ValidRouteNotFoundException;
+				}
+			} else {
+				if(isset($position[$uri[$i]])) {
+					$position = &$position[$uri[$i]]["children"];
+				} elseif(isset($position["*"])) {
+					$position = &$position["*"]["children"];
+				} else {
+					throw new ValidRouteNotFoundException;
+				}
+			}
 		}
-	      } else {
-		if(isset($position[$uri[$i]])) {
-		  $position = &$position[$uri[$i]]["children"];
-		} elseif(isset($position["*"])) {
-		  $position = &$position["*"]["children"];
-		} else {
-		  throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
-		}
-	      }
-	    }
 
-	    throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
-	  }
+		throw new ValidRouteNotFoundException;
+	}
 
 	/**
 	 * Perform routing based upon the discovered route
