@@ -1,5 +1,5 @@
 {
-	"name": "ouropencode/dachi",
+	"name": "maxmckenzie/dachi",
 	"version": "3.1.5",
     "bin": ["bin/dachi"],
 	"autoload": {
