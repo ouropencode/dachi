@@ -9,60 +9,60 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ConfigCommand extends Command
 {
-	protected function configure()
-	{
-		$this->setName('dachi:config')
-			->setDescription('Generate configuration file for Dachi');
-	}
+  protected function configure()
+  {
+    $this->setName('dachi:config')
+      ->setDescription('Generate configuration file for Dachi');
+  }
 
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
+  protected function execute(InputInterface $input, OutputInterface $output)
+  {
 
-		$output->writeln("Generating configuration file...");
+    $output->writeln("Generating configuration file...");
 
-		$this->buildConfiguration();
+    $this->buildConfiguration();
 
-		$output->writeln("Done!");
-	}
+    $output->writeln("Done!");
+  }
 
-	protected function buildConfiguration() {
-		$config = array();
+  protected function buildConfiguration() {
+    $config = array();
 
-		$environments = array("production", "development", "local", "testing");
-		while(count($environments) > 0) {
-			$path = 'config/' . $environments[0] . '/';
-			if(file_exists($path) && $handle = opendir($path)) {
-				while(false !== ($entry = readdir($handle))) {
-					if($entry == "." || $entry == "..") continue;
+    $environments = array("production", "development", "local", "testing");
+    while(count($environments) > 0) {
+      $path = 'config/' . $environments[0] . '/';
+      if(file_exists($path) && $handle = opendir($path)) {
+        while(false !== ($entry = readdir($handle))) {
+          if($entry == "." || $entry == "..") continue;
 
-					foreach($environments as $env) {
-						$position = &$config[$env];
-						$key = explode(str_replace('.json', '', $entry), '.');
+          foreach($environments as $env) {
+            $position = &$config[$env];
+            $key = explode(str_replace('.json', '', $entry), '.');
 
-						$token = strtok(str_replace('.json', '', $entry), '.');
-						while($token !== false) {
-							$nextToken = strtok('.');
-							if(!isset($position[$token]))
-								$position[$token] = array();
+            $token = strtok(str_replace('.json', '', $entry), '.');
+            while($token !== false) {
+              $nextToken = strtok('.');
+              if(!isset($position[$token]))
+                $position[$token] = array();
 
-							if($nextToken === false) {
-								$position[$token] = json_decode(file_get_contents($path . $entry));
-							} else {
-								$position = &$position[$token];
-							}
+              if($nextToken === false) {
+                $position[$token] = json_decode(file_get_contents($path . $entry), true);
+              } else {
+                $position = &$position[$token];
+              }
 
-							$token = $nextToken;
-						}
-					}
-				}
-			}
-			unset($environments[0]);
-			$environments = array_values($environments);
-		}
+              $token = $nextToken;
+            }
+          }
+        }
+      }
+      unset($environments[0]);
+      $environments = array_values($environments);
+    }
 
-		if(!file_exists('cache'))
-			mkdir('cache');
+    if(!file_exists('cache'))
+      mkdir('cache');
 
-		file_put_contents('cache/dachi.config.json', json_encode($config));
-	}
+    file_put_contents('cache/dachi.config.ser', serialize($config));
+  }
 }
