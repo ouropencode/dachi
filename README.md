@@ -26,7 +26,7 @@ To create a new Dachi project just create a `composer.json` file with the follow
 			}
 		},
 		"require": {
-			"ouropencode/dachi": "^3.0"
+			"maxmckenzie/dachi": "^3.0"
 		}
 	}
 

@@ -62,7 +62,7 @@ class RouteCommand extends Command
     if(substr($file, -4) !== ".php" || strpos($file, "Controller") === false)
       return false;
 
-    if(strpos($file, "vendor/ouropencode/dachi/example") === 0)
+    if(strpos($file, "vendor/maxmckenzie/dachi/example") === 0)
       return false;
 
     require_once $file;
