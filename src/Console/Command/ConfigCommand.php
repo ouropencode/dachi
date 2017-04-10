@@ -64,5 +64,6 @@ class ConfigCommand extends Command
       mkdir('cache');
 
     file_put_contents('cache/dachi.config.ser', serialize($config));
+    file_put_contents('cache/dachi.config.json', json_encode($config));
   }
 }
