@@ -46,8 +46,6 @@ class RouteCommand extends Command
   protected function processFolder($directory) {
     if(!$directory || $directory == "/" || $directory == "\\" || !file_exists($directory))
       return false;
-    
-    if (substr($directory, -18) == "vendor/maxmckenzie") return false;
 
     $files = array_diff(scandir($directory), array('.', '..'));
 
