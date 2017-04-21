@@ -10,99 +10,99 @@ namespace Dachi\Core;
  * @author    LemonDigits.com <devteam@lemondigits.com>
  */
 class Router {
-  protected static $routes = array();
+	protected static $routes = array();
 
-  /**
-   * Load the routing information object into memory.
-   * @return null
-   */
-  protected static function load() {
-    if(file_exists('cache/dachi.routes.ser'))
-      self::$routes = unserialize(file_get_contents('cache/dachi.routes.ser'));
-  }
+	/**
+	 * Load the routing information object into memory.
+	 * @return null
+	 */
+	protected static function load() {
+		if(file_exists('cache/dachi.routes.ser'))
+			self::$routes = unserialize(file_get_contents('cache/dachi.routes.ser'));
+	}
 
-  /**
-   * Performs routing based upon the loaded routing information and the incoming request
-   * @return null
-   */
-  public static function route() {
-    if(defined('DACHI_CLI'))
-      return false;
+	/**
+	 * Performs routing based upon the loaded routing information and the incoming request
+	 * @return null
+	 */
+	public static function route() {
+		if(defined('DACHI_CLI'))
+			return false;
 
-    try {
-      $uri = Request::getFullUri();
-      $route = self::findRoute($uri);
-      self::performRoute($route);
+		try {
+			$uri = Request::getFullUri();
+			$route = self::findRoute($uri);
+			self::performRoute($route);
 
-      return Template::render();
-    } catch (ValidRouteNotFoundException $e) {
-      require("views/404.php");
-    }
-  }
+			return Template::render();
+		} catch (ValidRouteNotFoundException $e) {
+			require("views/404.php");
+		}
+	}
 
-  /**
-   * Find and process a valid route from the uri
-   * @internal
-   * @param  array $uri Array of uri parts (split by /)
-   * @throws ValidRouteNotFoundException
-   * @return array
-   */
-  public static function findRoute($uri) {
-    if(self::$routes === array())
-      self::load();
+	/**
+	 * Find and process a valid route from the uri
+	 * @internal
+	 * @param  array $uri Array of uri parts (split by /)
+	 * @throws ValidRouteNotFoundException
+	 * @return array
+	 */
+	public static function findRoute($uri) {
+		if(self::$routes === array())
+			self::load();
 
-    $count = count($uri);
+		$count = count($uri);
 
-    $position = &self::$routes;
-    for($i = 0; $i < $count; $i++) {
-      if($i == $count - 1) {
-        if(isset($position[$uri[$i]]) && isset($position[$uri[$i]]["route"])) {
-          return $position[$uri[$i]]["route"];
-        } else if(isset($position["*"]) && isset($position["*"]["route"])) {
-          return $position["*"]["route"];
-        } else {
-          throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
-        }
-      } else {
-        if(isset($position[$uri[$i]])) {
-          $position = &$position[$uri[$i]]["children"];
-        } elseif(isset($position["*"])) {
-          $position = &$position["*"]["children"];
-        } else {
-          throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
-        }
-      }
-    }
+		$position = &self::$routes;
+		for($i = 0; $i < $count; $i++) {
+			if($i == $count - 1) {
+				if(isset($position[$uri[$i]]) && isset($position[$uri[$i]]["route"])) {
+					return $position[$uri[$i]]["route"];
+				} else if(isset($position["*"]) && isset($position["*"]["route"])) {
+					return $position["*"]["route"];
+				} else {
+					throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
+				}
+			} else {
+				if(isset($position[$uri[$i]])) {
+					$position = &$position[$uri[$i]]["children"];
+				} elseif(isset($position["*"])) {
+					$position = &$position["*"]["children"];
+				} else {
+					throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
+				}
+			}
+		}
 
-    throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
-  }
+		throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
+	}
 
-  /**
-   * Perform routing based upon the discovered route
-   * @internal
-   * @param  array $route Format: array(class, method, uri_variables)
-   * @see Request::setRequestVariables()
-   * @return mixed Return value of last route to be executed
-   */
-  public static function performRoute($route) {
-    $api_mode = isset($route["api-mode"]);
-    Request::setRequestVariables($route["variables"], $api_mode);
+	/**
+	 * Perform routing based upon the discovered route
+	 * @internal
+	 * @param  array $route Format: array(class, method, uri_variables)
+	 * @see Request::setRequestVariables()
+	 * @return mixed Return value of last route to be executed
+	 */
+	public static function performRoute($route) {
+		$api_mode = isset($route["api-mode"]);
+		Request::setRequestVariables($route["variables"], $api_mode);
 
-    $controller = new $route["class"];
-    $response = $controller->$route["method"]();
+		$controller = new $route["class"];
+		$response = $controller->$route["method"]();
 
-    if(!Request::isAjax() && !Request::isAPI() && isset($route["render-path"])) {
-      Request::setRenderPath($route["render-path"]);
-      try {
-        $route = self::findRoute(explode('/', $route["render-path"]));
-      } catch(ValidRouteNotFoundException $e) {
-        throw new ValidRenderRouteNotFoundException($e);
-      }
-      $response = self::performRoute($route);
-    }
+		if(!Request::isAjax() && !Request::isAPI() && isset($route["render-path"])) {
+			Request::setRenderPath($route["render-path"]);
+			try {
+				$route = self::findRoute(explode('/', $route["render-path"]));
+			} catch(ValidRouteNotFoundException $e) {
+				throw new ValidRenderRouteNotFoundException($e);
+			}
+			$response = self::performRoute($route);
+		}
 
-    return $response;
-  }
+		return $response;
+	}
 }
 
 /**

@@ -13,46 +13,46 @@ namespace Dachi\Core;
  * @author    LemonDigits.com <devteam@lemondigits.com>
  */
 class Modules {
-  protected static $modules = array();
+	protected static $modules = array();
 
-  /**
-   * Load the routing information object into memory.
-   * @return null
-   */
-  protected static function initialize() {
-    if(file_exists("cache/dachi.modules.ser")) {
-      $modules = unserialize(file_get_contents("cache/dachi.modules.ser"));
+	/**
+	 * Load the routing information object into memory.
+	 * @return null
+	 */
+	protected static function initialize() {
+		if(file_exists("cache/dachi.modules.ser")) {
+			$modules = unserialize(file_get_contents("cache/dachi.modules.ser"));
 
-      foreach($modules as $module)
-        self::$modules[$module['shortname']] = new Module($module);
-    }
-  }
+			foreach($modules as $module)
+				self::$modules[$module['shortname']] = new Module($module);
+		}
+	}
 
-  /**
-   * Retrieve module information.
-   * @param  string $module Module shortname
-   * @return Module
-   */
-  public static function get($module) {
-    if(self::$modules === array())
-      self::initialize();
+	/**
+	 * Retrieve module information.
+	 * @param  string $module Module shortname
+	 * @return Module
+	 */
+	public static function get($module) {
+		if(self::$modules === array())
+			self::initialize();
 
-    if(!isset(self::$modules[$module]))
-      return false;
+		if(!isset(self::$modules[$module]))
+			return false;
 
-    return self::$modules[$module];
-  }
+		return self::$modules[$module];
+	}
 
-  /**
-   * Retrieve all module information.
-   * @return array Array of Module objects
-   */
-  public static function getAll() {
-    if(self::$modules === array())
-      self::initialize();
+	/**
+	 * Retrieve all module information.
+	 * @return array Array of Module objects
+	 */
+	public static function getAll() {
+		if(self::$modules === array())
+			self::initialize();
 
-    return self::$modules;
-  }
+		return self::$modules;
+	}
 }
 
 /**
@@ -64,37 +64,37 @@ class Modules {
  * @author    LemonDigits.com <devteam@lemondigits.com>
  */
 class Module {
-  protected $shortname = "";
-  protected $path      = "";
-  protected $namespace = "";
+	protected $shortname = "";
+	protected $path      = "";
+	protected $namespace = "";
 
-  public function __construct($module) {
-    $this->shortname = $module['shortname'];
-    $this->path      = $module['path'];
-    $this->namespace = $module['namespace'];
-  }
+	public function __construct($module) {
+		$this->shortname = $module['shortname'];
+		$this->path      = $module['path'];
+		$this->namespace = $module['namespace'];
+	}
 
-  /**
-   * Get module short name
-   * @return string
-   */
-  public function getShortName() {
-    return $this->shortname;
-  }
+	/**
+	 * Get module short name
+	 * @return string
+	 */
+	public function getShortName() {
+		return $this->shortname;
+	}
 
-  /**
-   * Get module path from root
-   * @return string
-   */
-  public function getPath() {
-    return $this->path;
-  }
+	/**
+	 * Get module path from root
+	 * @return string
+	 */
+	public function getPath() {
+		return $this->path;
+	}
 
-  /**
-   * Get module PHP namespace
-   * @return string
-   */
-  public function getNamespace() {
-    return $this->namespace;
-  }
+	/**
+	 * Get module PHP namespace
+	 * @return string
+	 */
+	public function getNamespace() {
+		return $this->namespace;
+	}
 }

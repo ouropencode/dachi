@@ -15,58 +15,58 @@ use Dachi\Core\Kernel;
  * @author    LemonDigits.com <devteam@lemondigits.com>
  */
 class Configuration {
-  /**
-   * Full configuration object.
-   *
-   * This array is structured as an array of nested arrays, with three top nodes:
-   * - production
-   * - development
-   * - environment
-   *
-   * Below these nodes are the configuration files, these should be be formatted as such:
-   * - dachi
-   * - api.twitter
-   * - [a-z.-]+
-   *
-   * Under the configuration file nodes the structure is determined by the file itself and can vary.
-   * 
-   * @var array
-   */
-  protected static $config = array();
+	/**
+	 * Full configuration object.
+	 *
+	 * This array is structured as an array of nested arrays, with three top nodes:
+	 * - production
+	 * - development
+	 * - environment
+	 *
+	 * Below these nodes are the configuration files, these should be be formatted as such:
+	 * - dachi
+	 * - api.twitter
+	 * - [a-z.-]+
+	 *
+	 * Under the configuration file nodes the structure is determined by the file itself and can vary.
+	 *
+	 * @var array
+	 */
+	protected static $config = array();
 
-  /**
-   * Load the configuration object into memory.
-   * @return null
-   */
-  protected static function load() {
-    self::$config = unserialize(file_get_contents('cache/dachi.config.ser'));
-  }
-  
-  /**
-   * Get a configuration entry
-   * @param  string $key     The configuration key to retrieve (e.g. dachi.siteName or api.twitter.publicKey)
-   * @param  string $default The default value to return if the key was not found
-   * @return mixed
-   */
-  public static function get($key, $default = "default") {
-    if(self::$config == array())
-      self::load();
+	/**
+	 * Load the configuration object into memory.
+	 * @return null
+	 */
+	protected static function load() {
+		self::$config = unserialize(file_get_contents('cache/dachi.config.ser'));
+	}
 
-    $env = Kernel::getEnvironment();
-    $position = self::$config[$env];
-    $token = strtok($key, '.');
-    while($token !== false) {
-      $nextToken = strtok('.');
-      if(!isset($position[$token]))
-        return $default;
+	/**
+	 * Get a configuration entry
+	 * @param  string $key     The configuration key to retrieve (e.g. dachi.siteName or api.twitter.publicKey)
+	 * @param  string $default The default value to return if the key was not found
+	 * @return mixed
+	 */
+	public static function get($key, $default = "default") {
+		if(self::$config == array())
+			self::load();
 
-      if($nextToken === false)
-        return $position[$token];
+		$env = Kernel::getEnvironment();
+		$position = self::$config[$env];
+		$token = strtok($key, '.');
+		while($token !== false) {
+			$nextToken = strtok('.');
+			if(!isset($position[$token]))
+				return $default;
 
-      $position = &$position[$token];
-      $token = $nextToken;
-    }
+			if($nextToken === false)
+				return $position[$token];
 
-    return $default;
-  }
+			$position = &$position[$token];
+			$token = $nextToken;
+		}
+
+		return $default;
+	}
 }
