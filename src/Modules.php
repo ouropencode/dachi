@@ -20,11 +20,11 @@ class Modules {
 	 * @return null
 	 */
 	protected static function initialize() {
-		if(file_exists("cache/dachi.modules.json")) {
-			$modules = json_decode(file_get_contents("cache/dachi.modules.json"));
+		if(file_exists("cache/dachi.modules.ser")) {
+			$modules = unserialize(file_get_contents("cache/dachi.modules.ser"));
 
 			foreach($modules as $module)
-				self::$modules[$module->shortname] = new Module($module);
+				self::$modules[$module['shortname']] = new Module($module);
 		}
 	}
 
@@ -69,9 +69,9 @@ class Module {
 	protected $namespace = "";
 
 	public function __construct($module) {
-		$this->shortname = $module->shortname;
-		$this->path      = $module->path;
-		$this->namespace = $module->namespace;
+		$this->shortname = $module['shortname'];
+		$this->path      = $module['path'];
+		$this->namespace = $module['namespace'];
 	}
 
 	/**

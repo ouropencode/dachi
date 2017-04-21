@@ -38,7 +38,7 @@ class RouteCommand extends Command
 		if(!file_exists('cache'))
 			mkdir('cache');
 
-		file_put_contents('cache/dachi.routes.json', json_encode($this->routes));
+		file_put_contents('cache/dachi.routes.ser', serialize($this->routes));
 
 		$output->writeln("Done!");
 	}

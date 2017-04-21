@@ -46,7 +46,7 @@ class ConfigCommand extends Command
 								$position[$token] = array();
 
 							if($nextToken === false) {
-								$position[$token] = json_decode(file_get_contents($path . $entry));
+								$position[$token] = json_decode(file_get_contents($path . $entry), true);
 							} else {
 								$position = &$position[$token];
 							}
@@ -63,6 +63,7 @@ class ConfigCommand extends Command
 		if(!file_exists('cache'))
 			mkdir('cache');
 
+		file_put_contents('cache/dachi.config.ser', serialize($config));
 		file_put_contents('cache/dachi.config.json', json_encode($config));
 	}
 }

@@ -39,7 +39,7 @@ class ModulesCommand extends Command
 		if(!file_exists('cache'))
 			mkdir('cache');
 
-		file_put_contents('cache/dachi.modules.json', json_encode($this->modules));
+		file_put_contents('cache/dachi.modules.ser', serialize($this->modules));
 
 		foreach($this->controllers as $controller)
 			$this->runSetup($controller, $output);

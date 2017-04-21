@@ -29,7 +29,7 @@ class Configuration {
 	 * - [a-z.-]+
 	 *
 	 * Under the configuration file nodes the structure is determined by the file itself and can vary.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected static $config = array();
@@ -39,9 +39,9 @@ class Configuration {
 	 * @return null
 	 */
 	protected static function load() {
-		self::$config = json_decode(file_get_contents('cache/dachi.config.json'), true);
+		self::$config = unserialize(file_get_contents('cache/dachi.config.ser'));
 	}
-	
+
 	/**
 	 * Get a configuration entry
 	 * @param  string $key     The configuration key to retrieve (e.g. dachi.siteName or api.twitter.publicKey)

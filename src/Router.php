@@ -17,8 +17,8 @@ class Router {
 	 * @return null
 	 */
 	protected static function load() {
-		if(file_exists('cache/dachi.routes.json'))
-			self::$routes = json_decode(file_get_contents('cache/dachi.routes.json'), true);
+		if(file_exists('cache/dachi.routes.ser'))
+			self::$routes = unserialize(file_get_contents('cache/dachi.routes.ser'));
 	}
 
 	/**
@@ -29,11 +29,15 @@ class Router {
 		if(defined('DACHI_CLI'))
 			return false;
 
-		$uri = Request::getFullUri();
-		$route = self::findRoute($uri);
-		self::performRoute($route);
+		try {
+			$uri = Request::getFullUri();
+			$route = self::findRoute($uri);
+			self::performRoute($route);
 
-		return Template::render();
+			return Template::render();
+		} catch (ValidRouteNotFoundException $e) {
+			require("views/404.php");
+		}
 	}
 
 	/**
@@ -57,7 +61,7 @@ class Router {
 				} else if(isset($position["*"]) && isset($position["*"]["route"])) {
 					return $position["*"]["route"];
 				} else {
-					throw new ValidRouteNotFoundException;
+					throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
 				}
 			} else {
 				if(isset($position[$uri[$i]])) {
@@ -65,12 +69,12 @@ class Router {
 				} elseif(isset($position["*"])) {
 					$position = &$position["*"]["children"];
 				} else {
-					throw new ValidRouteNotFoundException;
+					throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
 				}
 			}
 		}
 
-		throw new ValidRouteNotFoundException;
+		throw new ValidRouteNotFoundException('Route not found /'.implode("/",$uri));
 	}
 
 	/**
