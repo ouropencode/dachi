@@ -111,7 +111,7 @@ function curl_get_contents($URL, $postData = array(), $curlOptionsInput = array(
  */
 function json_echo($object) {
 	header("Content-type: application/json");
-	echo json_encode($object);
+	echo safe_json_encode($object);
 	return true;
 }
 
@@ -123,7 +123,7 @@ function get_calling_namespace() {
 	$trace = debug_backtrace();
 	if(!isset($trace[2]) || !isset($trace[2]['class']))
 		return "";
-	
+
 	$reflect = new ReflectionClass($trace[2]['class']);
 	return $reflect->getNamespaceName();
 }
@@ -175,4 +175,49 @@ function base64url_encode($i) {
 
 function base64url_decode($i) {
 	return base64_decode(str_replace(array('-', '_'), array('+', '/'), $i));
+}
+
+/**
+ * utf8 safe json_encode
+ * @source https://stackoverflow.com/questions/10199017/how-to-solve-json-error-utf8-error-in-php-json-decode
+ */
+function safe_json_encode($value){
+    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+        $encoded = json_encode($value, JSON_PRETTY_PRINT);
+    } else {
+        $encoded = json_encode($value);
+    }
+    switch (json_last_error()) {
+        case JSON_ERROR_NONE:
+            return $encoded;
+        case JSON_ERROR_DEPTH:
+            throw new Exception('JSON: Maximum stack depth exceeded');
+        case JSON_ERROR_STATE_MISMATCH:
+            throw new Exception('JSON: Underflow or the modes mismatch');
+        case JSON_ERROR_CTRL_CHAR:
+            throw new Exception('JSON: Unexpected control character found');
+        case JSON_ERROR_SYNTAX:
+            throw new Exception('JSON: Syntax error, malformed JSON');
+        case JSON_ERROR_UTF8:
+            $clean = utf8ize($value);
+            return safe_json_encode($clean);
+        default:
+            throw new Exception('JSON: Unknown error');
+
+    }
+}
+
+/**
+ * utf8ize a value
+ * @source https://stackoverflow.com/questions/10199017/how-to-solve-json-error-utf8-error-in-php-json-decode
+ */
+function utf8ize($mixed) {
+    if (is_array($mixed)) {
+        foreach ($mixed as $key => $value) {
+            $mixed[$key] = utf8ize($value);
+        }
+    } else if (is_string ($mixed)) {
+        return utf8_encode($mixed);
+    }
+    return $mixed;
 }
