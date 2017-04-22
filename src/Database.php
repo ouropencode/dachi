@@ -54,6 +54,23 @@ class Database {
 				$config->addCustomStringFunction($extension["name"], $extension["handler"]);
 		}
 
+		if(Configuration::get("database.cache_memcached", false) != false) {
+			$memcached_config = Configuration::get("database.cache_memcached", array());
+
+			$memcached = new Memcached();
+			$memcached->addServer($memcached_config["host"], $memcached_config["port"]);
+
+			$cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
+			$cacheDriver->setMemcached($memcached);
+			$cacheDriver->setNamespace($memcached_config["namespace"] . '_query_');
+			$config->setQueryCacheImpl($cacheDriver);
+
+			$cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
+			$cacheDriver->setMemcached($memcached);
+			$cacheDriver->setNamespace($memcached_config["namespace"] . '_metadata_');
+			$config->setMetadataCacheImpl($cacheDriver);
+		}
+
 		self::$entity_manager = EntityManager::create($db_params, $config);
 	}
 
