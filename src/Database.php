@@ -57,7 +57,7 @@ class Database {
 		if(Configuration::get("database.cache_memcached", false) != false) {
 			$memcached_config = Configuration::get("database.cache_memcached", array());
 
-			$memcached = new Memcached();
+			$memcached = new \Memcached();
 			$memcached->addServer($memcached_config["host"], $memcached_config["port"]);
 
 			$cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
