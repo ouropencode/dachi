@@ -182,11 +182,7 @@ function base64url_decode($i) {
  * @source https://stackoverflow.com/questions/10199017/how-to-solve-json-error-utf8-error-in-php-json-decode
  */
 function safe_json_encode($value){
-    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        $encoded = json_encode($value, JSON_PRETTY_PRINT);
-    } else {
-        $encoded = json_encode($value);
-    }
+    $encoded = json_encode($value);
     switch (json_last_error()) {
         case JSON_ERROR_NONE:
             return $encoded;
