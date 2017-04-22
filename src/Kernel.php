@@ -14,8 +14,8 @@ namespace Dachi\Core;
  * @author    LemonDigits.com <devteam@lemondigits.com>
  */
 class Kernel {
-	protected static $version = "2.0";
-	protected static $version_patch = "0";
+	protected static $version = "3.1";
+	protected static $version_patch = "11";
 	protected static $environment = "";
 	protected static $git_hash = "";
 
@@ -45,7 +45,7 @@ class Kernel {
 	 * This is only available if running via the internal LemonDigits.com build toolkit, or if
 	 * your CI can be configured to output the environment to the 'dachi_environment' file.
 	 * (this could also be done manually by a developer during deployment)
-	 * 
+	 *
 	 * @param bool $forceCheck Should we ignore the cached environment and forceably check the filesystem?
 	 * @return string
 	 */
@@ -67,7 +67,7 @@ class Kernel {
 	 * This is only available if running via the internal LemonDigits.com build toolkit, or if
 	 * your CI can be configured to output the short hash (6-chars) to the 'dachi_git_hash' file
 	 * (this could also be done manually by a developer during deployment)
-	 * 
+	 *
 	 * @param bool $forceCheck Should we ignore the cached git hash and forceably check the filesystem?
 	 * @return string
 	 */
