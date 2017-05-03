@@ -24,7 +24,8 @@ class Files extends \Dachi\Core\Helper {
 			case "s3":
 				$credentials = Configuration::get("api.aws.s3");
 
-				self::$bucket = $credentials["bucket"];
+				self::$bucket     = $credentials["bucket"];
+				self::$key_prefix = isset($credentials["key-prefix"]) ? $credentials["key-prefix"]  : "uploads/";
 
 				self::$s3 = new S3Client(array(
 					"version"     => "latest",
@@ -52,7 +53,7 @@ class Files extends \Dachi\Core\Helper {
 				$object = array(
 					"Bucket" => self::$bucket,
 					"ACL"    => 'public-read',
-					"Key"    => "uploads/" . $internal_filename,
+					"Key"    => self::$key_prefix . $internal_filename,
 					"Body"   => $data
 				);
 
