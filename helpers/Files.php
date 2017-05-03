@@ -11,6 +11,7 @@ class Files extends \Dachi\Core\Helper {
 
 	protected static $s3 = null;
 	protected static $bucket = null;
+	protected static $key_prefix = null;
 	protected static $handler = null;
 
 	public static function initalize() {
