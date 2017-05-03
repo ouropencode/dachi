@@ -180,9 +180,14 @@ function base64url_decode($i) {
 /**
  * utf8 safe json_encode
  * @source https://stackoverflow.com/questions/10199017/how-to-solve-json-error-utf8-error-in-php-json-decode
+ * expanded by Peter Corcoran with new/missing error constants.
  */
 function safe_json_encode($value){
-    $encoded = json_encode($value);
+    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+        $encoded = json_encode($value, JSON_PRETTY_PRINT);
+    } else {
+        $encoded = json_encode($value);
+    }
     switch (json_last_error()) {
         case JSON_ERROR_NONE:
             return $encoded;
@@ -197,9 +202,14 @@ function safe_json_encode($value){
         case JSON_ERROR_UTF8:
             $clean = utf8ize($value);
             return safe_json_encode($clean);
+		case JSON_ERROR_RECURSION:
+			throw new Exception('JSON: Recursion detected');
+		case JSON_ERROR_INF_OR_NAN:
+			throw new Exception('JSON: Infinity or NaN detected');
+		case JSON_ERROR_UNSUPPORTED_TYPE:
+			throw new Exception('JSON: Unsupported type');
         default:
-            throw new Exception('JSON: Unknown error');
-
+            throw new Exception('JSON: Unknown error: ' . json_last_error());
     }
 }
 
