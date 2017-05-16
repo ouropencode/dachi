@@ -55,6 +55,24 @@ class Template {
 		}));
 		self::$twig->getExtension('core')->setDateFormat('Y-m-d H:i');
 
+
+		self::$twig->addFilter(new \Twig_SimpleFilter('format_money', function($input) {
+			$value = "£" . number_format(abs(round($input, 2)), 2);
+			return ($input < 0 ? "(" . $value . ")" : $value);
+		}));
+		self::$twig->addFilter(new \Twig_SimpleFilter('format_percent', function($input) {
+			$value = number_format(abs(round($input, 2)), 2) . "%";
+			return ($input < 0 ? "(" . $value . ")" : $value);
+		}));
+		self::$twig->addFilter(new \Twig_SimpleFilter('format_integer', function($input) {
+			$value = abs(floor($input));
+			return ($input < 0 ? "(" . $value . ")" : $value);
+		}));
+		self::$twig->addFilter(new \Twig_SimpleFilter('format_hours', function($input) {
+			$value = number_format(abs(round($input, 2)), 2) . "hrs";
+			return ($input < 0 ? "(" . $value . ")" : $value);
+		}));
+
 		$sort_filter = function($value, $key, $direction, $absolute, $natural) {
 			usort($value, function($a, $b) use ($key, $direction, $absolute, $natural) {
 				if($key) {
@@ -229,7 +247,6 @@ class Template {
 			return json_echo($response);
 		} else {
 			$data["response"] = Request::getResponseCode();
-
 			$response = self::$twig->render(self::getRenderTemplate(true), $data);
 
 			foreach(array_reverse(self::$render_actions) as $action) {

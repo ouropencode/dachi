@@ -1,6 +1,6 @@
 {
 	"name": "ouropencode/dachi",
-	"version": "3.1.17",
+	"version": "3.1.18",
 	"bin": ["bin/dachi"],
 	"autoload": {
 		"psr-4": {
