@@ -58,19 +58,19 @@ class Template {
 
 		self::$twig->addFilter(new \Twig_SimpleFilter('format_money', function($input) {
 			$value = "£" . number_format(abs(round($input, 2)), 2);
-			return ($input < 0 ? "(" . $value . ")" : $value);
+			return "<span class='ff-money'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>";
 		}));
 		self::$twig->addFilter(new \Twig_SimpleFilter('format_percent', function($input) {
 			$value = number_format(abs(round($input, 2)), 2) . "%";
-			return ($input < 0 ? "(" . $value . ")" : $value);
+			return "<span class='ff-integer'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>";
 		}));
 		self::$twig->addFilter(new \Twig_SimpleFilter('format_integer', function($input) {
 			$value = abs(floor($input));
-			return ($input < 0 ? "(" . $value . ")" : $value);
+			return "<span class='ff-percent'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>";
 		}));
 		self::$twig->addFilter(new \Twig_SimpleFilter('format_hours', function($input) {
 			$value = number_format(abs(round($input, 2)), 2) . "hrs";
-			return ($input < 0 ? "(" . $value . ")" : $value);
+			return "<span class='ff-hours'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>";
 		}));
 
 		$sort_filter = function($value, $key, $direction, $absolute, $natural) {
