@@ -55,23 +55,22 @@ class Template {
 		}));
 		self::$twig->getExtension('core')->setDateFormat('Y-m-d H:i');
 
-
 		self::$twig->addFilter(new \Twig_SimpleFilter('format_money', function($input) {
 			$value = "£" . number_format(abs(round($input, 2)), 2);
-			return "<span class='ff-money'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>";
+			return new \Twig_Markup("<span class='ff ff-money'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
 		}));
 		self::$twig->addFilter(new \Twig_SimpleFilter('format_percent', function($input) {
 			$value = number_format(abs(round($input, 2)), 2) . "%";
-			return "<span class='ff-integer'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>";
-		}));
+			return new \Twig_Markup("<span class='ff ff-percent'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
+		}, array('is_safe' => array('all'))));
 		self::$twig->addFilter(new \Twig_SimpleFilter('format_integer', function($input) {
 			$value = abs(floor($input));
-			return "<span class='ff-percent'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>";
-		}));
+			return new \Twig_Markup("<span class='ff ff-integer'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
+		}, array('is_safe' => array('all'))));
 		self::$twig->addFilter(new \Twig_SimpleFilter('format_hours', function($input) {
 			$value = number_format(abs(round($input, 2)), 2) . "hrs";
-			return "<span class='ff-hours'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>";
-		}));
+			return new \Twig_Markup("<span class='ff ff-hours'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
+		}, array('is_safe' => array('all'))));
 
 		$sort_filter = function($value, $key, $direction, $absolute, $natural) {
 			usort($value, function($a, $b) use ($key, $direction, $absolute, $natural) {
