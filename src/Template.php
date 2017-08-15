@@ -226,7 +226,7 @@ class Template {
 			$data["domain"]    = Configuration::get("dachi.domain", "localhost");
 			$data["baseURL"]   = Configuration::get("dachi.baseURL", "/");
 			$data["assetsURL"] = str_replace("%v", Kernel::getGitHash(), Configuration::get("dachi.assetsURL", "/build/"));
-			$data["logoURL"]   = defined("DACHI_LOGO_URL") ? DACHI_LOGO_URL : $data["assetsURL"] . "static/images/logo.png";
+			$data["logoURL"]   = defined("DACHI_LOGO_URL") ? DACHI_LOGO_URL : $data["assetsURL"] . "/static/images/logo.png";
 			$data["renderTPL"] = self::getRenderTemplate();
 			$data["URI"]       = Request::getFullUri();
 		}
