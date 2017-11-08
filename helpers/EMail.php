@@ -10,11 +10,13 @@ use PHPMailer;
 abstract class EMail extends \Dachi\Core\Helper {
 
 	public static function initalize() {
-
+		$defaultSender = Configuration::get("helper.email.sender", "\Dachi\Helpers\Simple");
+		return call_user_func(array($defaultSender, "initalize"));
 	}
 
 	public static function send($options) {
-
+		$defaultSender = Configuration::get("helper.email.sender", "\Dachi\Helpers\Simple");
+		return call_user_func(array($defaultSender, "send"), $options);
 	}
 
 	protected static function tempdir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000) {
