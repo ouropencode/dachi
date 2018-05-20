@@ -82,7 +82,8 @@ class RouteCommand extends Command
 							"class"    => '\\' . $class,
 							"method"   => $method->getName(),
 							"route"    => $matches[1],
-							"api-mode" => false
+							"api-mode" => false,
+							"session"  => false
 						);
 
 						if(preg_match("/@route-render\s+([^$\n\r]+)/i", $doc_block, $matches))
@@ -90,6 +91,9 @@ class RouteCommand extends Command
 
 						if(preg_match("/@api/i", $doc_block, $matches))
 							$controller["api-mode"] = true;
+
+						if(preg_match("/@session/i", $doc_block, $matches))
+							$controller["session"] = true;
 
 						$controllers[] = $controller;
 					}
@@ -105,6 +109,7 @@ class RouteCommand extends Command
 		$method   = $controller["method"];
 		$route    = $controller["route"];
 		$api_mode = $controller["api-mode"];
+		$session  = $controller["session"];
 
 		$route = str_replace("\\", "/", $route);
 		$route = preg_replace("/\s+/", "", $route);
@@ -114,7 +119,7 @@ class RouteCommand extends Command
 		if($route[strlen($route) - 1] == "/")
 			$route = substr($route, 0, -1);
 
-		$output->writeln("Adding " . ($api_mode ? "API " : "") . "route '/" . $route . "'.");
+		$output->writeln("Adding " . ($api_mode ? "API " : "") . "route '/" . $route . "' " . ($session ? "with session unclosed" : "") . ".");
 
 		$routeParts = explode('/', $route);
 
@@ -170,8 +175,8 @@ class RouteCommand extends Command
 					$final_route["render-path"] = $path;
 				}
 
-				if($api_mode)
-					$final_route["api-mode"] = true;
+				if($api_mode) $final_route["api-mode"] = true;
+				if($session)  $final_route["session"] = true;
 
 				$position[$part]["route"] = $final_route;
 			}

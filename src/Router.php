@@ -85,8 +85,11 @@ class Router {
 	 * @return mixed Return value of last route to be executed
 	 */
 	public static function performRoute($route) {
-		$api_mode = isset($route["api-mode"]);
+		$api_mode = isset($route["api-mode"]) && $route["api-mode"] == true;
 		Request::setRequestVariables($route["variables"], $api_mode);
+
+		$session  = isset($route["session"]) && $route["session"] == true;
+		if($session != true) session_write_close();
 
 		$controller = new $route["class"];
 		$response = $controller->$route["method"]();
