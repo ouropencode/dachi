@@ -12,6 +12,9 @@ class Files extends \Dachi\Core\Helper {
 	protected static $s3 = null;
 	protected static $bucket = null;
 	protected static $key_prefix = null;
+	protected static $secure_secret = null;
+	protected static $secure_bucket = null;
+	protected static $secure_key_prefix = null;
 	protected static $handler = null;
 
 	public static function initalize() {
@@ -25,8 +28,12 @@ class Files extends \Dachi\Core\Helper {
 			case "s3":
 				$credentials = Configuration::get("api.aws.s3");
 
-				self::$bucket     = $credentials["bucket"];
-				self::$key_prefix = isset($credentials["key-prefix"]) ? $credentials["key-prefix"]  : "uploads/";
+				self::$bucket            = $credentials["bucket"];
+				self::$secure_bucket     = isset($credentials["secure-bucket"]) ? $credentials["secure-bucket"] : self::$bucket;
+				self::$key_prefix        = isset($credentials["key-prefix"]) ? $credentials["key-prefix"]  : "uploads/";
+				self::$secure_key_prefix = isset($credentials["secure-key-prefix"]) ? $credentials["secure-key-prefix"]  : "uploads/";
+
+				self::$secure_secret = hash('sha256', $credentials["key"]);
 
 				self::$s3 = new S3Client(array(
 					"version"     => "latest",
@@ -38,7 +45,7 @@ class Files extends \Dachi\Core\Helper {
 		self::$initalized = true;
 	}
 
-	public static function store($filename, $data, $content_type = null) {
+	public static function store($filename, $data, $content_type = null, $secure = false) {
 		if(!self::$initalized)
 			self::initalize();
 
@@ -61,12 +68,19 @@ class Files extends \Dachi\Core\Helper {
 				if($content_type)
 					$object["ContentType"] = $content_type;
 
+				if($secure == true) {
+					$date_string      = (new \DateTime())->format('Ym');
+					$generated_prefix = $date_string . hash('sha256', self::$secure_secret . $date_string) . "/";
+					$object["Bucket"] = self::$secure_bucket;
+					$object["Key"]    = self::$secure_key_prefix . $generated_prefix . $internal_filename;
+				}
+
 				$result = self::$s3->putObject($object);
 				return $result["ObjectURL"];
 		}
 	}
 
-	public static function delete($filename) {
+	public static function delete($filename, $secure = false) {
 		if(!self::$initalized)
 			self::initalize();
 
@@ -82,10 +96,15 @@ class Files extends \Dachi\Core\Helper {
 				if(strpos($filename, "/"))
 					$filename = substr($filename, strrpos($filename, "/") + 1);
 
-				$result = self::$s3->deleteObject(array(
+				$object = array(
 					"Bucket" => self::$bucket,
-					"Key"    => "uploads/" . $filename
-				));
+					"Key"    => $filename
+				);
+
+				if($secure == true)
+					$object["Bucket"] = self::$secure_bucket;
+
+				$result = self::$s3->deleteObject($object);
 				return true;
 		}
 	}
