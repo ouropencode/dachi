@@ -70,6 +70,9 @@ class ModulesCommand extends Command
 		if(strpos($file, "vendor/ouropencode/dachi/example") === 0)
 			return false;
 
+		if(strpos($file, "vendor/composer/") === 0)
+			return false;
+
 		require_once $file;
 	}
 
