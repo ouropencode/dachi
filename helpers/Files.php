@@ -93,8 +93,7 @@ class Files extends \Dachi\Core\Helper {
 				return true;
 
 			case "s3":
-				if(strpos($filename, "/"))
-					$filename = substr($filename, strrpos($filename, "/") + 1);
+				$filename = preg_replace("/^https?:\/\/([^\/]+)\//", "", $filename);
 
 				$object = array(
 					"Bucket" => self::$bucket,
