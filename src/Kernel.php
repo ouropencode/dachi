@@ -15,7 +15,7 @@ namespace Dachi\Core;
  */
 class Kernel {
 	protected static $version = "3.1";
-	protected static $version_patch = "28";
+	protected static $version_patch = "30";
 	protected static $environment = "";
 	protected static $git_hash = "";
 
