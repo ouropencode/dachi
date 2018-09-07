@@ -11,17 +11,20 @@ namespace Dachi\Core;
  */
 class Session {
 
+	private static $name;
+	private static $https;
+	private static $domain;
+	private static $path;
+
 	/**
 	 * Start a session
-	 * 
+	 *
 	 * @param  string $name The session name
 	 * @param  string $domain The domain this session is attached to. (defaults to php's SERVER_NAME)
 	 * @param  boolean $forceHttps Allow session only via HTTPS (defaults to 'yes if user is currently via HTTPS')
 	 * @return null
 	 */
 	public static function start($name, $domain = "", $forceHttps = false) {
-		session_name('sess_' . $name);
-
 		$domain = $domain ? $domain : (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : "");
 		$https = $forceHttps ? true : isset($_SERVER['HTTPS']);
 
@@ -31,17 +34,20 @@ class Session {
 		if(substr_count($domain, ".") < 2 && strlen($domain) >= 1 && $domain[0] != '.')
 			$domain = '.' . $domain;
 
-		session_set_cookie_params(time() + 3600, '/', $domain, $https);
+		self::$name   = 'sess_' . $name;
+		self::$https  = $https;
+		self::$domain = $domain;
+		self::$path   = '/';
 
 		if(session_status() != PHP_SESSION_NONE)
 			session_destroy();
 
-		session_start();
+		self::session_start();
 
 		if(!self::isValid()) {
 			$_SESSION = array();
 			session_destroy();
-			session_start();
+			self::session_start();
 		}
 
 		if(self::hasSessionMoved()) {
@@ -57,7 +63,7 @@ class Session {
 	 * Has this session moved
 	 *
 	 * Moving is currently defined as "changing user agent".
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public static function hasSessionMoved() {
@@ -83,7 +89,7 @@ class Session {
 	 * Sessions are invalidated 10 seconds after regeneration, this is to allow AJAX
 	 * requests to complete execution before terminating the session. This method will
 	 * return false if the 10 second period has expired.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public static function isValid() {
@@ -105,7 +111,7 @@ class Session {
 	 *
 	 * This method sets the old session to expire in 10 seconds. This allows for any pending
 	 * requests to be served before the session ID changes.
-	 * 
+	 *
 	 * @return null
 	 */
 	public static function regenerate() {
@@ -121,10 +127,22 @@ class Session {
 		session_write_close();
 
 		session_id($new_session);
-		session_start();
+		self::session_start();
 
 		unset($_SESSION['dachi_closed']);
 		unset($_SESSION['dachi_expires']);
+	}
+
+	private static function session_start() {
+		$name     = self::$name;
+		$lifetime = 3600;
+
+		session_set_cookie_params($lifetime, self::$path, self::$domain, self::$https);
+		session_name($name);
+		session_start();
+
+		if (isset($_COOKIE[$name]))
+			setcookie($name, $_COOKIE[$name], time() + $lifetime, "/");
 	}
 
 }
