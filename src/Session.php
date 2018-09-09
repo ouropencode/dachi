@@ -135,14 +135,11 @@ class Session {
 
 	private static function session_start() {
 		$name     = self::$name;
-		$lifetime = 3600;
+		$lifetime = 3600 * 2;
 
 		session_set_cookie_params($lifetime, self::$path, self::$domain, self::$https);
 		session_name($name);
 		session_start();
-
-		if (isset($_COOKIE[$name]))
-			setcookie($name, $_COOKIE[$name], time() + $lifetime, "/");
 	}
 
 }
