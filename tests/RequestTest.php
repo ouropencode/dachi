@@ -142,6 +142,36 @@ class RequestTest extends Dachi_TestBase {
 		$this->assertEquals("get_test", Request::getArgument("test_get", null, "get_[0-9]+"));
 	}
 
+	public function testFilesArgument() {
+		$_FILES['relevant_file']['name']     = 'mimicfile.png';
+		$_FILES['relevant_file']['tmp_name'] = '/etc/passwd';
+
+		$relevant_file = Request::getArgument("relevant_file", array());
+		$this->assertEquals("/etc/passwd", $relevant_file['tmp_name']);
+	}
+
+	/**
+	 * @expectedException Dachi\Core\InvalidRequestArgumentException
+	 */
+	public function testGetArgumentFileMimic() {
+		$_GET['relevant_file']['name']     = 'mimicfile.png';
+		$_GET['relevant_file']['tmp_name'] = '/etc/passwd';
+
+		$relevant_file = Request::getArgument("relevant_file", array());
+		$this->assertEquals("/etc/passwd", $relevant_file['tmp_name']);
+	}
+
+	/**
+	 * @expectedException Dachi\Core\InvalidRequestArgumentException
+	 */
+	public function testPostArgumentFileMimic() {
+		$_POST['relevant_file']['name']     = 'mimicfile.png';
+		$_POST['relevant_file']['tmp_name'] = '/etc/passwd';
+
+		$relevant_file = Request::getArgument("relevant_file", array());
+		$this->assertEquals("/etc/passwd", $relevant_file['tmp_name']);
+	}
+
 	public function testGetSession() {
 		$_SESSION['test_sess'] = 'sess_test';
 		$this->assertEquals("sess_test", Request::getSession("test_sess"));
