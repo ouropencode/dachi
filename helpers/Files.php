@@ -35,12 +35,19 @@ class Files extends \Dachi\Core\Helper {
 
 				self::$secure_secret = hash('sha256', $credentials["key"]);
 
-				self::$s3 = new S3Client(array(
-					"version"     => "latest",
-					"region"      => $credentials["region"],
-					"credentials" => array("key" => $credentials["key"], "secret" => $credentials["secret"])
-				));
-				break;
+                $s3clientOptions = [
+                    "version" => "latest",
+                    "region" => $credentials["region"],
+                    "credentials" => ["key" => $credentials["key"], "secret" => $credentials["secret"]],
+                ];
+
+                if (isset($credentials['endpoint'])) {
+                    $s3clientOptions['endpoint'] = $credentials['endpoint'];
+                    $s3clientOptions['use_path_style_endpoint'] = true;
+                }
+
+                self::$s3 = new S3Client($s3clientOptions);
+                break;
 		}
 		self::$initalized = true;
 	}
