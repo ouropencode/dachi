@@ -28,7 +28,8 @@ class Simple extends \Dachi\Helpers\EMail {
 
 		$email = new \PHPMailer();
 		$email->isSMTP();
-		$email->SMTPAuth = true;
+		$email->SMTPAuth = Configuration::get("api.phpmailer.smtp_auth", true);
+        $email->SMTPAutoTLS = Configuration::get("api.phpmailer.smtp_auto_tls", true);
 		$email->Host = Configuration::get("api.phpmailer.smtp_host");
 		$email->Username = Configuration::get("api.phpmailer.smtp_user");
 		$email->Password = Configuration::get("api.phpmailer.smtp_pass");
@@ -71,7 +72,7 @@ class Simple extends \Dachi\Helpers\EMail {
 		return true;
 	}
 
-	private static function tempdir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000) {
+	protected static function tempdir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000) {
 		if (is_null($dir))
 			$dir = sys_get_temp_dir();
 
