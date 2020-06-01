@@ -32,8 +32,11 @@ class RouteCommand extends Command
 
 		$controllers = $this->detectControllers();
 
-		foreach($controllers as $controller)
-			$this->addRoute($controller, $output);
+		foreach($controllers as $controller) {
+      $code = $this->addRoute($controller, $output);
+			if($code != 0)
+        return $code;
+    }
 
 		if(!file_exists('cache'))
 			mkdir('cache');
@@ -116,7 +119,7 @@ class RouteCommand extends Command
 		return $controllers;
 	}
 
-	protected function addRoute($controller, $output) {
+	protected function addRoute($controller, $output): int {
 		$class       = $controller["class"];
 		$method      = $controller["method"];
 		$route       = $controller["route"];
@@ -125,12 +128,22 @@ class RouteCommand extends Command
 		$nonce       = $controller["nonce"];
 		$nonce_check = $controller["nonce-check"];
 
+    if(!$route || strlen($route) == 0) {
+      $output->writeln("");
+      $output->writeln("<error>ERROR: BLANK ROUTE DETECTED -------------------------</error>");
+      $output->writeln("Class:  " . $class);
+      $output->writeln("Method: " . $method);
+      $output->writeln("Route:  " . $route);
+      $output->writeln("File:   " . $reflectNewMethod->getFileName() . ":" . $reflectNewMethod->getStartLine());
+      return 102;
+    }
+
 		$route = str_replace("\\", "/", $route);
 		$route = preg_replace("/\s+/", "", $route);
 		if($route[0] == "/")
 			$route = substr($route, 1);
 
-		if($route[strlen($route) - 1] == "/")
+		if(strlen($route) > 0 && $route[strlen($route) - 1] == "/")
 			$route = substr($route, 0, -1);
 
 		$output->writeln(
@@ -173,7 +186,7 @@ class RouteCommand extends Command
 					$output->writeln("Existing Method: " . $position[$part]["route"][1]);
 					$output->writeln("Existing Route:  " . $position[$part]["route"][2]);
 					$output->writeln("Existing File:   " . $reflectExistingMethod->getFileName() . ":" . $reflectExistingMethod->getStartLine());
-					exit(101);
+					return 101;
 				}
 				$final_route = array(
 					"class"     => $class,
@@ -185,10 +198,21 @@ class RouteCommand extends Command
 				if(isset($controller["render-path"])) {
 					$path = str_replace("\\", "/", $controller["render-path"]);
 					$path = preg_replace("/\s+/", "", $path);
+
+          if(!$path || strlen($path) == 0) {
+              $output->writeln("");
+              $output->writeln("<error>ERROR: BLANK RENDER ROUTE DETECTED -------------------------</error>");
+              $output->writeln("Class:  " . $class);
+              $output->writeln("Method: " . $method);
+              $output->writeln("Route:  " . $route);
+              $output->writeln("File:   " . $reflectNewMethod->getFileName() . ":" . $reflectNewMethod->getStartLine());
+              return 103;
+          }
+
 					if($path[0] == "/")
 						$path = substr($path, 1);
 
-					if($path[strlen($path) - 1] == "/")
+					if(strlen($path) > 0 && $path[strlen($path) - 1] == "/")
 						$path = substr($path, 0, -1);
 
 					$final_route["render-path"] = $path;
@@ -204,5 +228,7 @@ class RouteCommand extends Command
 
 			$position = &$position[$part]["children"];
 		}
+
+    return 0;
 	}
 }
