@@ -16,7 +16,7 @@ class AllCommand extends Command
 			->setDescription('Perform all routing operations to update Dachi cache files');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$commands = array(
 			"dachi:config"  => array(),
@@ -45,5 +45,6 @@ class AllCommand extends Command
 		echo $response;
 
 		$output->writeln("--------------------------------------------------[ DONE! DONE!");
+    return 0;
 	}
 }

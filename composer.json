@@ -1,6 +1,6 @@
 {
 	"name": "ouropencode/dachi",
-	"version": "3.1.33",
+	"version": "3.1.34",
 	"bin": ["bin/dachi"],
 	"autoload": {
 		"psr-4": {
@@ -15,11 +15,11 @@
 		"doctrine/orm": "^2.7",
 		"twig/twig": "^3.0",
 		"paquettg/php-html-parser": "^2.2",
-		"mandrill/mandrill": "^1.0",
 		"aws/aws-sdk-php": "^3.0@dev",
-		"mailgun/mailgun-php": "^3.0",
 		"php-http/guzzle6-adapter": "^2.0",
-		"phpmailer/phpmailer": "^6.1",
 		"sendgrid/sendgrid": "^7.5"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "9"
 	}
 }

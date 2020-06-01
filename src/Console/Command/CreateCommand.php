@@ -21,7 +21,7 @@ class CreateCommand extends Command
 			);
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$helper = $this->getHelper('question');
 
@@ -41,21 +41,22 @@ class CreateCommand extends Command
 		$cmd->run($cmd_input, $output);
 
 		$output->writeln("Done!");
+    return 0;
 	}
 
-	protected function copyFiles($source, $destination) {	
-		$dir = opendir($source); 
-		@mkdir($destination); 
+	protected function copyFiles($source, $destination) {
+		$dir = opendir($source);
+		@mkdir($destination);
 		while(($file = readdir($dir)) !== false) {
 			if ($file != '.' && $file != '..') {
 				if (is_dir($source . '/' . $file)) {
 					@mkdir($destination . '/' . $file);
-					$this->copyFiles($source . '/' . $file, $destination . '/' . $file); 
+					$this->copyFiles($source . '/' . $file, $destination . '/' . $file);
 				} else {
-					copy($source . '/' . $file, $destination . '/' . $file); 
-				} 
-			} 
-		} 
-		closedir($dir); 
+					copy($source . '/' . $file, $destination . '/' . $file);
+				}
+			}
+		}
+		closedir($dir);
 	}
 }

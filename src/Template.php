@@ -19,57 +19,58 @@ class Template {
 	 * @return null
 	 */
 	protected static function initialize() {
-		$loader = new \Twig_Loader_Filesystem();
+		$loader = new \Twig\Loader\FilesystemLoader();
 
 		foreach(Modules::getAll() as $module)
 			if(file_exists($module->getPath() . '/views'))
-				$loader->addPath($module->getPath() . '/views', $module->getShortName());
+				$loader->addPath($module->getPath() . \DIRECTORY_SEPARATOR . 'views', $module->getShortName());
 
 		if(file_exists('views'))
-			$loader->addPath('views', 'global');
+			$loader->addPath(Kernel::getProjectPath() . \DIRECTORY_SEPARATOR . 'views', 'global');
 
-		self::$twig = new \Twig_Environment($loader, array(
+		self::$twig = new \Twig\Environment($loader, array(
 			'debug'            => Configuration::get('debug.template', 'false') === 'true',
 			'auto_reload'      => Kernel::getEnvironment() === "local",
 			'charset'          => Configuration::get('templates.charset', 'utf-8'),
-			'cache'            => 'cache/twig',
+			'cache'            => Kernel::getProjectPath() . \DIRECTORY_SEPARATOR . 'cache' . \DIRECTORY_SEPARATOR . 'twig',
 			'strict_variables' => false,
-			'autoescape'       => true
+			'autoescape'       => 'html'
 		));
+		self::$twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('Y-m-d H:i');
 
-		self::$twig->addFilter(new \Twig_SimpleFilter('time_short', function($date) {
+
+		self::$twig->addFilter(new \Twig\TwigFilter('time_short', function($date) {
 			if($date == "now") $date = new \DateTime();
 			return $date->format('H:i');
 		}));
-		self::$twig->addFilter(new \Twig_SimpleFilter('date_short', function($date) {
+		self::$twig->addFilter(new \Twig\TwigFilter('date_short', function($date) {
 			if($date == "now") $date = new \DateTime();
 			return $date->format('Y-m-d');
 		}));
-		self::$twig->addFilter(new \Twig_SimpleFilter('date_long', function($date) {
+		self::$twig->addFilter(new \Twig\TwigFilter('date_long', function($date) {
 			if($date == "now") $date = new \DateTime();
 			return $date->format('jS F Y');
 		}));
-		self::$twig->addFilter(new \Twig_SimpleFilter('date_uk', function($date) {
+		self::$twig->addFilter(new \Twig\TwigFilter('date_uk', function($date) {
 			if($date == "now") $date = new \DateTime();
 			return $date->format('d/m/Y');
 		}));
-		self::$twig->getExtension('core')->setDateFormat('Y-m-d H:i');
 
-		self::$twig->addFilter(new \Twig_SimpleFilter('format_money', function($input) {
+		self::$twig->addFilter(new \Twig\TwigFilter('format_money', function($input) {
 			$value = "£" . number_format(abs(round($input, 2)), 2);
-			return new \Twig_Markup("<span class='ff ff-money'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
+			return new \Twig\Markup("<span class='ff ff-money'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
 		}));
-		self::$twig->addFilter(new \Twig_SimpleFilter('format_percent', function($input) {
+		self::$twig->addFilter(new \Twig\TwigFilter('format_percent', function($input) {
 			$value = number_format(abs(round($input, 2)), 2) . "%";
-			return new \Twig_Markup("<span class='ff ff-percent'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
+			return new \Twig\Markup("<span class='ff ff-percent'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
 		}, array('is_safe' => array('all'))));
-		self::$twig->addFilter(new \Twig_SimpleFilter('format_integer', function($input) {
+		self::$twig->addFilter(new \Twig\TwigFilter('format_integer', function($input) {
 			$value = abs(floor($input));
-			return new \Twig_Markup("<span class='ff ff-integer'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
+			return new \Twig\Markup("<span class='ff ff-integer'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
 		}, array('is_safe' => array('all'))));
-		self::$twig->addFilter(new \Twig_SimpleFilter('format_hours', function($input) {
+		self::$twig->addFilter(new \Twig\TwigFilter('format_hours', function($input) {
 			$value = number_format(abs(round($input, 2)), 2) . "hrs";
-			return new \Twig_Markup("<span class='ff ff-hours'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
+			return new \Twig\Markup("<span class='ff ff-hours'>" . ($input < 0 ? "(" . $value . ")" : $value) . "</span>", "UTF-8");
 		}, array('is_safe' => array('all'))));
 
 		$sort_filter = function($value, $key, $direction, $absolute, $natural) {
@@ -146,7 +147,7 @@ class Template {
 	     * | natsortabs("value", "desc")                     [5, -5, -4, 4, -3, 3, 2, -2, 1, -1]
 		 */
 
-		self::$twig->addFilter(new \Twig_SimpleFilter("sort", function ($value, array $options = array()) use ($sort_filter) {
+		self::$twig->addFilter(new \Twig\TwigFilter("sort", function ($value, array $options = array()) use ($sort_filter) {
 			$key       = isset($options[0]) ? $options[0] : null;
 			$direction = isset($options[1]) ? $options[1] : "asc";
 			$absolute  = isset($options[2]) ? $options[2] : false;
@@ -154,19 +155,19 @@ class Template {
 			return $sort_filter($value, $key, $direction, $absolute, $natural);
 		}, array('is_variadic' => true)));
 
-		self::$twig->addFilter(new \Twig_SimpleFilter("natsort", function ($value, array $options = array()) use ($sort_filter) {
+		self::$twig->addFilter(new \Twig\TwigFilter("natsort", function ($value, array $options = array()) use ($sort_filter) {
 			$key       = isset($options[0]) ? $options[0] : null;
 			$direction = isset($options[1]) ? $options[1] : "asc";
 			return $sort_filter($value, $key, $direction, false, true);
 		}, array('is_variadic' => true)));
 
-		self::$twig->addFilter(new \Twig_SimpleFilter("sortabs", function ($value, array $options = array()) use ($sort_filter) {
+		self::$twig->addFilter(new \Twig\TwigFilter("sortabs", function ($value, array $options = array()) use ($sort_filter) {
 			$key       = isset($options[0]) ? $options[0] : null;
 			$direction = isset($options[1]) ? $options[1] : "asc";
 			return $sort_filter($value, $key, $direction, true, false);
 		}, array('is_variadic' => true)));
 
-		self::$twig->addFilter(new \Twig_SimpleFilter("natsortabs", function ($value, array $options = array()) use ($sort_filter) {
+		self::$twig->addFilter(new \Twig\TwigFilter("natsortabs", function ($value, array $options = array()) use ($sort_filter) {
 			$key       = isset($options[0]) ? $options[0] : null;
 			$direction = isset($options[1]) ? $options[1] : "asc";
 			return $sort_filter($value, $key, $direction, true, true);
@@ -182,7 +183,7 @@ class Template {
 		if(self::$twig === null)
 			self::initialize();
 
-		return self::$twig->loadTemplate($template . '.twig');
+		return self::$twig->load($template . '.twig');
 	}
 
 	/**

@@ -25,19 +25,15 @@ class RequestTest extends Dachi_TestBase {
 		$this->assertEquals("part_five",  Request::getUri(4, "part_[a-z]+"));
 	}
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestURIException
-	 */
 	public function testGetUriAtIntegerIndexInvalidRegex() {
 		$_GET['dachi_uri'] = "/part_one";
+    $this->expectException(\Dachi\Core\InvalidRequestURIException::class);
 		Request::getUri(0, "part_[0-9]+");
 	}
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestURIException
-	 */
 	public function testGetInvalidUriAtIntegerIndex() {
 		$_GET['dachi_uri'] = "/";
+    $this->expectException(\Dachi\Core\InvalidRequestURIException::class);
 		Request::getUri(1);
 	}
 
@@ -78,9 +74,6 @@ class RequestTest extends Dachi_TestBase {
 		$this->assertEquals("part_five",  Request::getUri("test_five",  "part_[a-z]+"));
 	}
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestURIException
-	 */
 	public function testGetUriAtStringIndexInvalidRegex() {
 		$_GET['dachi_uri'] = "/part_one";
 
@@ -88,14 +81,16 @@ class RequestTest extends Dachi_TestBase {
 			array(0, "test_one")
 		));
 
+    $this->expectException(\Dachi\Core\InvalidRequestURIException::class);
+
 		Request::getUri("test_one", "part_[0-9]+");
 	}
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestURIException
-	 */
 	public function testGetInvalidUriAtStringIndex() {
 		$_GET['dachi_uri'] = "/";
+
+    $this->expectException(\Dachi\Core\InvalidRequestURIException::class);
+
 		Request::getUri("invalid_part");
 	}
 
@@ -134,11 +129,10 @@ class RequestTest extends Dachi_TestBase {
 		$this->assertEquals("get_test", Request::getArgument("test_get", null, "get_[a-z]+"));
 	}
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestArgumentException
-	 */
 	public function testGetArgumentInvalidRegex() {
 		$_GET['test_get'] = 'get_test';
+
+    $this->expectException(\Dachi\Core\InvalidRequestArgumentException::class);
 		$this->assertEquals("get_test", Request::getArgument("test_get", null, "get_[0-9]+"));
 	}
 
@@ -150,24 +144,20 @@ class RequestTest extends Dachi_TestBase {
 		$this->assertEquals("/etc/passwd", $relevant_file['tmp_name']);
 	}
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestArgumentException
-	 */
 	public function testGetArgumentFileMimic() {
 		$_GET['relevant_file']['name']     = 'mimicfile.png';
 		$_GET['relevant_file']['tmp_name'] = '/etc/passwd';
 
+    $this->expectException(\Dachi\Core\InvalidRequestArgumentException::class);
 		$relevant_file = Request::getArgument("relevant_file", array());
 		$this->assertEquals("/etc/passwd", $relevant_file['tmp_name']);
 	}
 
-	/**
-	 * @expectedException Dachi\Core\InvalidRequestArgumentException
-	 */
 	public function testPostArgumentFileMimic() {
 		$_POST['relevant_file']['name']     = 'mimicfile.png';
 		$_POST['relevant_file']['tmp_name'] = '/etc/passwd';
 
+    $this->expectException(\Dachi\Core\InvalidRequestArgumentException::class);
 		$relevant_file = Request::getArgument("relevant_file", array());
 		$this->assertEquals("/etc/passwd", $relevant_file['tmp_name']);
 	}

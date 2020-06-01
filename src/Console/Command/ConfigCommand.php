@@ -15,7 +15,7 @@ class ConfigCommand extends Command
 			->setDescription('Generate configuration file for Dachi');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 
 		$output->writeln("Generating configuration file...");
@@ -23,6 +23,7 @@ class ConfigCommand extends Command
 		$this->buildConfiguration();
 
 		$output->writeln("Done!");
+    return 0;
 	}
 
 	protected function buildConfiguration() {

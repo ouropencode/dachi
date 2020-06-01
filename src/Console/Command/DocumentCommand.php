@@ -26,7 +26,7 @@ class DocumentCommand extends Command
 			);
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		if($input->getOption('internal')) {
 			$type = "internal";
@@ -62,18 +62,19 @@ class DocumentCommand extends Command
 		copy(__DIR__ . "/../../../LICENCE.md", $destination . "/LICENCE.md");
 
 		$output->writeln("Done!");
+    return 0;
 	}
 
 	protected function deleteTree($directory) {
 		if(!$directory || $directory == "/" || $directory == "\\" || !file_exists($directory))
 			return false;
 
-		$files = array_diff(scandir($directory), array('.', '..')); 
+		$files = array_diff(scandir($directory), array('.', '..'));
 
-		foreach ($files as $file) { 
-			(is_dir("$directory/$file")) ? $this->deleteTree("$directory/$file") : unlink("$directory/$file"); 
+		foreach ($files as $file) {
+			(is_dir("$directory/$file")) ? $this->deleteTree("$directory/$file") : unlink("$directory/$file");
 		}
 
-		return rmdir($directory); 
+		return rmdir($directory);
 	}
 }

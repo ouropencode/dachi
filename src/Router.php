@@ -88,11 +88,14 @@ class Router {
 		$api_mode = isset($route["api-mode"]) && $route["api-mode"] == true;
 		Request::setRequestVariables($route["variables"], $api_mode);
 
+		$nonce = isset($route["nonce"]) && $route["nonce"] == true;
+		if($nonce) self::createRouteNonce($route);
+
 		$session  = isset($route["session"]) && $route["session"] == true;
 		if($session != true) session_write_close();
 
 		$controller = new $route["class"];
-		$response = $controller->$route["method"]();
+		$response = $controller->{$route["method"]}();
 
 		if(!Request::isAjax() && !Request::isAPI() && isset($route["render-path"])) {
 			Request::setRenderPath($route["render-path"]);
@@ -105,6 +108,16 @@ class Router {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Creates a one time use nonce for the route provided and sets it within the request object.
+	 * @internal
+	 * @param  array $route Format: array(class, method, uri_variables)
+	 * @return void
+	 */
+	public static function createRouteNonce($route) {
+
 	}
 }
 

@@ -1,11 +1,11 @@
 <?php
 namespace Dachi\Tests;
 
-use \PHPUnit_Framework_TestCase;
-use \PHPUnit_Framework_TestResult;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestResult;
 
-class Dachi_TestBase extends PHPUnit_Framework_TestCase {
-	public function run(PHPUnit_Framework_TestResult $result = NULL)
+class Dachi_TestBase extends TestCase {
+	public function setUp(): void
 	{
 		if(!file_exists(__DIR__ . "/.test-temp"))
 			mkdir(__DIR__ . "/.test-temp");
@@ -20,13 +20,13 @@ class Dachi_TestBase extends PHPUnit_Framework_TestCase {
 				"timezone" => "Europe/London"
 			)
 		);
-		file_put_contents("cache/dachi.config.json", json_encode(array(
+		file_put_contents("cache/dachi.config.ser", serialize(array(
 			"production" => $config,
 			"development" => $config,
 			"local" => $config
 		)));
 
-		file_put_contents("cache/dachi.routes.json", json_encode(array(
+		file_put_contents("cache/dachi.routes.ser", serialize(array(
 			"__unit_test" => array(
 				"route" => array(
 					"class" => "Dachi\\Tests\\FakeRouteProvider",
@@ -94,7 +94,7 @@ class Dachi_TestBase extends PHPUnit_Framework_TestCase {
 			)
 		)));
 
-		file_put_contents("cache/dachi.modules.json", json_encode(array(
+		file_put_contents("cache/dachi.modules.ser", serialize(array(
 			"UnitTestModuleA" => array(
 				"namespace" => "UnitTestNamespace\\UnitTestModuleA",
 				"shortname" => "UnitTestModuleA",
@@ -159,7 +159,5 @@ class ModelTest extends Model {
 }
 EOT;
 		file_put_contents('src/UnitTestModuleA/ModelTest.php', $testModel);
-
-		return parent::run($result);
 	}
 }

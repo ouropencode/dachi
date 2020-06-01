@@ -27,7 +27,7 @@ class TestCommand extends Command
 			);
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$output->writeln("--------------------------------------------------[ DACHI UNIT TESTS");
 
@@ -38,7 +38,7 @@ class TestCommand extends Command
 
 		if(file_exists($tests_dachi . "/.test-temp/"))
 			$this->deleteTree($tests_dachi . "/.test-temp/");
-		
+
 		if(file_exists($tests_project . "/.test-temp/"))
 			$this->deleteTree($tests_project . "/.test-temp/");
 
@@ -50,7 +50,7 @@ class TestCommand extends Command
 		$output->writeln(implode("\n", $response));
 		if($return_val !== 0) {
 			$output->writeln("Dachi unit tests failed!");
-			exit(101);
+			return 101;
 		}
 
 		if(file_exists($tests_project) && $tests_project != $tests_dachi) {
@@ -64,29 +64,30 @@ class TestCommand extends Command
 			$output->writeln($response_proj);
 			if($return_val_proj !== 0) {
 				$output->writeln("Project unit tests failed!");
-				exit(102);
+				return 102;
 			}
 		}
 
 		if(file_exists($tests_dachi . "/.test-temp/"))
 			$this->deleteTree($tests_dachi . "/.test-temp/");
-		
+
 		if(file_exists($tests_project . "/.test-temp/"))
 			$this->deleteTree($tests_project . "/.test-temp/");
 
 		$output->writeln("Done!");
+    return 0;
 	}
 
 	protected function deleteTree($directory) {
 		if(!$directory || $directory == "/" || $directory == "\\" || !file_exists($directory))
 			return false;
 
-		$files = array_diff(scandir($directory), array('.', '..')); 
+		$files = array_diff(scandir($directory), array('.', '..'));
 
-		foreach ($files as $file) { 
-			(is_dir("$directory/$file")) ? $this->deleteTree("$directory/$file") : unlink("$directory/$file"); 
+		foreach ($files as $file) {
+			(is_dir("$directory/$file")) ? $this->deleteTree("$directory/$file") : unlink("$directory/$file");
 		}
 
-		return rmdir($directory); 
+		return rmdir($directory);
 	}
 }

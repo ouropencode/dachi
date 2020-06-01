@@ -55,21 +55,23 @@ class KernelFunctionsTest extends Dachi_TestBase {
 	public function testCurlGetContents() {
 		Kernel::initialize();
 
-		$response = curl_get_contents("http://echo.getpostman.com/status/200", array(), array(
+		$response = curl_get_contents("http://postman-echo.com/get", array(), array(
 			CURLOPT_VERBOSE => false
 		));
 
-		$this->assertEquals('{"status":200}', $response);
+    $parsed = json_decode($response);
+		$this->assertEquals('http://postman-echo.com/get', $parsed->url);
 	}
 
 	public function testCurlGetContentsSsl() {
 		Kernel::initialize();
 
-		$response = curl_get_contents("https://echo.getpostman.com/status/200", array(), array(
+		$response = curl_get_contents("https://postman-echo.com/get", array(), array(
 			CURLOPT_VERBOSE => false
 		));
 
-		$this->assertEquals('{"status":200}', $response);
+    $parsed = json_decode($response);
+		$this->assertEquals('https://postman-echo.com/get', $parsed->url);
 	}
 
 	public function testJsonEcho() {
@@ -80,14 +82,14 @@ class KernelFunctionsTest extends Dachi_TestBase {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertEquals('{"test":"value"}', $output);
+		$this->assertEquals("{\"test\":\"value\"}", $output);
 	}
 
 	public function testGetCallingNamespace() {
 		Kernel::initialize();
 
 		$namespace = get_calling_namespace();
-		$this->assertEquals('', $namespace);
+		$this->assertEquals('PHPUnit\Framework', $namespace);
 
 		$namespace = $this->__getThisCallingNamespace();
 		$this->assertEquals('Dachi\Tests', $namespace);

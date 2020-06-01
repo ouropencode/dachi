@@ -17,7 +17,7 @@ class RouteCommand extends Command
 			->setDescription('Generate routing information for Dachi');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$output->writeln("Loading controller classes...");
 
@@ -41,6 +41,7 @@ class RouteCommand extends Command
 		file_put_contents('cache/dachi.routes.ser', serialize($this->routes));
 
 		$output->writeln("Done!");
+    return 0;
 	}
 
 	protected function processFolder($directory) {
@@ -82,11 +83,13 @@ class RouteCommand extends Command
 					$doc_block = $method->getDocComment();
 					if(preg_match("/@route-url\s+([^$\n\r]+)/i", $doc_block, $matches)) {
 						$controller = array(
-							"class"    => '\\' . $class,
-							"method"   => $method->getName(),
-							"route"    => $matches[1],
-							"api-mode" => false,
-							"session"  => false
+							"class"       => '\\' . $class,
+							"method"      => $method->getName(),
+							"route"       => $matches[1],
+							"api-mode"    => false,
+							"session"     => false,
+							"nonce"       => false,
+							"nonce-check" => false
 						);
 
 						if(preg_match("/@route-render\s+([^$\n\r]+)/i", $doc_block, $matches))
@@ -98,6 +101,12 @@ class RouteCommand extends Command
 						if(preg_match("/@session/i", $doc_block, $matches))
 							$controller["session"] = true;
 
+						if(preg_match("/@nonce[^-]/i", $doc_block, $matches))
+							$controller["nonce"] = true;
+
+						if(preg_match("/@nonce-check\s+([^$\n\r]+)/i", $doc_block, $matches))
+							$controller["nonce-check"] = $matches[1];
+
 						$controllers[] = $controller;
 					}
 				}
@@ -108,11 +117,13 @@ class RouteCommand extends Command
 	}
 
 	protected function addRoute($controller, $output) {
-		$class    = $controller["class"];
-		$method   = $controller["method"];
-		$route    = $controller["route"];
-		$api_mode = $controller["api-mode"];
-		$session  = $controller["session"];
+		$class       = $controller["class"];
+		$method      = $controller["method"];
+		$route       = $controller["route"];
+		$api_mode    = $controller["api-mode"];
+		$session     = $controller["session"];
+		$nonce       = $controller["nonce"];
+		$nonce_check = $controller["nonce-check"];
 
 		$route = str_replace("\\", "/", $route);
 		$route = preg_replace("/\s+/", "", $route);
@@ -122,7 +133,12 @@ class RouteCommand extends Command
 		if($route[strlen($route) - 1] == "/")
 			$route = substr($route, 0, -1);
 
-		$output->writeln("Adding " . ($api_mode ? "API " : "") . "route '/" . $route . "' " . ($session ? "with session unclosed" : "") . ".");
+		$output->writeln(
+				"Adding " . ($api_mode ? "API " : "") . "route '/" . $route . "'" .
+					($session ? " with session unclosed" : "") .
+					($nonce ? " with nonce" : "") .
+					($nonce_check ? " with nonce check" : "") .
+				".");
 
 		$routeParts = explode('/', $route);
 
@@ -178,8 +194,10 @@ class RouteCommand extends Command
 					$final_route["render-path"] = $path;
 				}
 
-				if($api_mode) $final_route["api-mode"] = true;
-				if($session)  $final_route["session"] = true;
+				if($api_mode)    $final_route["api-mode"] = true;
+				if($session)     $final_route["session"] = true;
+				if($nonce)       $final_route["nonce"] = true;
+				if($nonce_check) $final_route["nonce_check"] = true;
 
 				$position[$part]["route"] = $final_route;
 			}

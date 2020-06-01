@@ -8,7 +8,7 @@ use Dachi\Core\Request;
 class TemplateTest extends Dachi_TestBase {
 	public function testGetTemplate() {
 		$template = Template::get("@global/base");
-		$this->assertInstanceOf('Twig_Template', $template);
+		$this->assertInstanceOf(\Twig\TemplateWrapper::class, $template);
 	}
 
 	public function testDisplayTemplate() {
@@ -59,7 +59,7 @@ class TemplateTest extends Dachi_TestBase {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertEquals('{"data":{"test":"our_data","siteName":"Unnamed Dachi Installation","timezone":"Europe\/London","domain":"localhost","baseURL":"\/","assetsURL":"\/build\/","URI":[]},"response":{"status":"assumed","message":"Assuming successful."},"render_actions":[{"type":"display_tpl","template":"@global\/test","target_id":"test_block"}]}', $output);
+		$this->assertEquals('{"render_tpl":"@global\/base","data":{"test":"our_data","siteName":"Unnamed Dachi Installation","timezone":"Europe\/London","domain":"localhost","baseURL":"\/","assetsURL":"\/build\/","logoURL":"\/build\/\/static\/images\/logo.png","renderTPL":"@global\/base","URI":[]},"response":{"status":"assumed","message":"Assuming successful."},"render_actions":[{"type":"display_tpl","template":"@global\/test","target_id":"test_block"}]}', $output);
 	}
 
 	public function testRenderTemplateWithResponseCodeViaAjax() {
@@ -76,6 +76,6 @@ class TemplateTest extends Dachi_TestBase {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertEquals('{"data":{"test":"our_data","siteName":"Unnamed Dachi Installation","timezone":"Europe\/London","domain":"localhost","baseURL":"\/","assetsURL":"\/build\/","URI":[]},"response":{"status":"success","message":"success_test"},"render_actions":[{"type":"display_tpl","template":"@global\/test","target_id":"test_block"}]}', $output);
+		$this->assertEquals('{"render_tpl":"@global\/base","data":{"test":"our_data","siteName":"Unnamed Dachi Installation","timezone":"Europe\/London","domain":"localhost","baseURL":"\/","assetsURL":"\/build\/","logoURL":"\/build\/\/static\/images\/logo.png","renderTPL":"@global\/base","URI":[]},"response":{"status":"success","message":"success_test"},"render_actions":[{"type":"display_tpl","template":"@global\/test","target_id":"test_block"}]}', $output);
 	}
 }

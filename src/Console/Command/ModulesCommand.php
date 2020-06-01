@@ -18,7 +18,7 @@ class ModulesCommand extends Command
 			->setDescription('Generate module information for Dachi');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$output->writeln("Loading controller classes...");
 
@@ -45,6 +45,7 @@ class ModulesCommand extends Command
 			$this->runSetup($controller, $output);
 
 		$output->writeln("Done!");
+    return 0;
 	}
 
 	protected function processFolder($directory) {

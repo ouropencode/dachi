@@ -91,4 +91,16 @@ class Kernel {
 	public static function getVersion($fullVersion = false) {
 		return ($fullVersion ? ("v" . self::$version . "." . self::$version_patch) : self::$version);
 	}
+
+	/**
+	 * Get the current project path.
+	 *
+	 * As this function simply returns the current working directory, it requires your server configuration
+	 * to always place the working directory in your project root. On non-standard configurations this will fail.
+	 *
+	 * @return string
+	 */
+	public static function getProjectPath($forceCheck = false) {
+		return getcwd();
+	}
 }
