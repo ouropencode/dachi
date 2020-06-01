@@ -1,0 +1,111 @@
+--------------------------------------------------[ DACHI UNIT TESTS
+PHPUnit 9.0.0 by Sebastian Bergmann and contributors.
+
+Configuration (Dachi\Tests\Configuration)
+ ✔ Get configuration
+ ✔ Get configuration default
+
+Controller (Dachi\Tests\Controller)
+ ✔ Controller parent exists
+
+Database (Dachi\Tests\Database)
+ ✔ Get entity manager
+ ✔ Get repository
+ ✔ Wrapper methods
+
+Exception (Dachi\Tests\Exception)
+ ✔ Dachi exception
+
+Helper (Dachi\Tests\Helper)
+ ✔ Helper parent exists
+
+Kernel Functions (Dachi\Tests\KernelFunctions)
+ ✔ Unparse url
+ ✔ Array column
+ ✔ Get exceution time
+ ✔ Curl get contents
+ ✔ Curl get contents ssl
+ ✔ Json echo
+ ✔ Get calling namespace
+
+Kernel (Dachi\Tests\Kernel)
+ ✔ Initialize
+ ✔ Get environment
+ ✔ Get version
+
+Model (Dachi\Tests\Model)
+ ✔ Model creation
+ ✔ Model json serialization
+
+Modules (Dachi\Tests\Modules)
+ ✔ Get module
+ ✔ Get all modules
+ ✔ Get module shortname
+ ✔ Get module path
+ ✔ Get module namespace
+
+Request (Dachi\Tests\Request)
+ ✔ Get uri at integer index without regex
+ ✔ Get uri at integer index with regex
+ ✔ Get uri at integer index invalid regex
+ ✔ Get invalid uri at integer index
+ ✔ Get uri at string index without regex
+ ✔ Get uri at string index with regex
+ ✔ Get uri at string index invalid regex
+ ✔ Get invalid uri at string index
+ ✔ Get full uri
+ ✔ Get and set render path
+ ✔ Get argument
+ ✔ Get argument default
+ ✔ Get argument regex
+ ✔ Get argument invalid regex
+ ✔ Files argument
+ ✔ Get argument file mimic
+ ✔ Post argument file mimic
+ ✔ Get session
+ ✔ Get session default
+ ✔ Set session
+ ✔ Get cookie
+ ✔ Set cookie
+ ✔ Get and set data
+ ✔ Has data
+ ✔ Get all data
+ ✔ Default response code
+ ✔ Get and set response code
+ ✔ Is ajax via non ajax
+ ✔ Is ajax via ajax
+
+Router (Dachi\Tests\Router)
+ ✔ Find route
+ ✔ Find wildcard route
+ ✔ Find wildcard child route
+ ✔ Find non wildcard route
+ ✔ Find non wildcard child route
+ ✔ Perform route
+ ✔ Perform wildcard route
+ ✔ Perform wildcard child route
+ ✔ Perform non wildcard route
+ ✔ Perform non wildcard child route
+ ✔ Perform chained route
+ ✔ Full route to rendered template
+
+Session (Dachi\Tests\Session)
+ ✔ Session start
+ ✔ Has session moved
+ ✔ Has session moved internet explorer 8 patch
+ ✔ Session destroy when moved user agent
+ ✔ Session id regeneration
+ ✔ Does invalidate
+
+Template (Dachi\Tests\Template)
+ ✔ Get template
+ ✔ Display template
+ ✔ Render template via non ajax
+ ✔ Render template with response code via non ajax
+ ✔ Render template via ajax
+ ✔ Render template with response code via ajax
+
+Time: 00:10.271, Memory: 6.00 MB
+
+OK (78 tests, 134 assertions)
+Done!
