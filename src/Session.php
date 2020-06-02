@@ -139,7 +139,17 @@ class Session {
 
 		session_set_cookie_params($lifetime, self::$path, self::$domain, self::$https);
 		session_name($name);
-		session_start();
+
+    $status = session_status();
+    if ($status == PHP_SESSION_DISABLED) {
+      throw new Exception("sessions are disabled");
+    } else if($status == PHP_SESSION_NONE) {
+      if(session_start() == false)
+        throw new Exception("failed to start session");
+      return true;
+    }
+
+    return false;
 	}
 
 }
