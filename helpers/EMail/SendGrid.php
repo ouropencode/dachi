@@ -44,7 +44,7 @@ class SendGrid extends \Dachi\Helpers\EMail {
 		$subject = new \SendGrid\Mail\Subject(substr(isset($options["subject"]) ? $options["subject"] : $defaultSubject, 0, 78));
 		$plainContent = new \SendGrid\Mail\PlainTextContent($text);
 		$htmlContent = new \SendGrid\Mail\HtmlContent($text);
-		$mail = new \SendGrid\Mail\Mail($from, $subject, $to, $plainContent, $htmlContent);
+		$mail = new \SendGrid\Mail\Mail($from, $to, $subject, $plainContent, $htmlContent);
 		$mail->addCustomArg("sender", "dachi-v2");
 
 		if(isset($options["attachments"]) && is_array($options["attachments"])) {
