@@ -41,7 +41,7 @@ class SendGrid extends \Dachi\Helpers\EMail {
 
 		$from = new \SendGrid\Mail\From($default_from_email . "@" . $domain, $default_from_name);
 		$to = new \SendGrid\Mail\To($options["email"], $options["name"]);
-		$subject = substr(isset($options["subject"]) ? $options["subject"] : $defaultSubject, 0, 78);
+		$subject = new \SendGrid\Mail\Subject(substr(isset($options["subject"]) ? $options["subject"] : $defaultSubject, 0, 78));
 		$plainContent = new \SendGrid\Mail\PlainTextContent($text);
 		$htmlContent = new \SendGrid\Mail\HtmlContent($text);
 		$mail = new \SendGrid\Mail\Mail($from, $subject, $to, $plainContent, $htmlContent);
