@@ -39,17 +39,18 @@ class SendGrid extends \Dachi\Helpers\EMail {
 		$default_from_email = Configuration::get("api.sendgrid.default_from_email");
 		$domain = Configuration::get("api.sendgrid.domain");
 
-		$from = new \SendGrid\Email($default_from_name, $default_from_email . "@" . $domain);
-		$to = new \SendGrid\Email($options["name"], $options["email"]);
+		$from = new \SendGrid\Mail\From($default_from_email . "@" . $domain, $default_from_name);
+		$to = new \SendGrid\Mail\To($options["email"], $options["name"]);
 		$subject = substr(isset($options["subject"]) ? $options["subject"] : $defaultSubject, 0, 78);
-		$content = new \SendGrid\Content("text/html", $text);
-		$mail = new \SendGrid\Mail($from, $subject, $to, $content);
+		$plainContent = new \SendGrid\Mail\PlainTextContent($text);
+		$htmlContent = new \SendGrid\Mail\HtmlContent($text);
+		$mail = new \SendGrid\Mail\Mail($from, $subject, $to, $plainContent, $htmlContent);
 		$mail->addCustomArg("sender", "dachi-v2");
 
 		if(isset($options["attachments"]) && is_array($options["attachments"])) {
 			$tempdir = self::tempdir(null, "email_");
 			foreach($options["attachments"] as $file) {
-			    $attachment = new \SendGrid\Attachment();
+			    $attachment = new \SendGrid\Mail\Attachment();
 			    $attachment->setContent(base64_encode($file["content"]));
 			    $attachment->setFilename($file["name"]);
 			    $attachment->setDisposition("attachment");
