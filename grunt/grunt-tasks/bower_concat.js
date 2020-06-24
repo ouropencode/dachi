@@ -14,8 +14,10 @@ module.exports = function(grunt, options) {
 
 	return {
 		all: {
-			dest: 'build/' + options.__versionString + '/bower.min.js',
-			cssDest: 'build/' + options.__versionString + '/bower.css',
+			dest: {
+				js: 'build/' + options.__versionString + '/bower.min.js',
+				css: 'build/' + options.__versionString + '/bower.css',
+			},
 			options: { separator: ';\n\n//------breakbreak-------\\\n\n' },
 			mainFiles: mainFiles,
 			exclude: options.grunt.bower.exclude,
