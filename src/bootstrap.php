@@ -10,8 +10,8 @@
 
 $bootstrapped = false;
 for($i = 0; $i <= 5; $i++) {
-	$path = __DIR__ . '/' . implode($i > 0 ? array_fill(0, $i, '..') : array(), '/') . '/vendor/autoload.php';
-	$root = realpath(__DIR__ . '/' . implode($i > 0 ? array_fill(0, $i, '..') : array(), '/'));
+	$path = __DIR__ . '/' . implode('/', $i > 0 ? array_fill(0, $i, '..') : array()) . '/vendor/autoload.php';
+	$root = realpath(__DIR__ . '/' . implode('/', $i > 0 ? array_fill(0, $i, '..') : array()));
 	if(file_exists($path)) {
 		include_once $path;
 		define('PATH_TO_PROJECT_ROOT', $root);
