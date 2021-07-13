@@ -134,6 +134,9 @@ class Request {
 			if($regex != ".*" && !preg_match("/^" . $regex . "$/i", $arg))
 				throw new InvalidRequestArgumentException;
 
+      if(is_numeric($default))
+        return (float)$arg;
+
 			return $arg;
 		}
 
