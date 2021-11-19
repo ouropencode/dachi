@@ -122,16 +122,16 @@ class Session {
 		$_SESSION['dachi_closed'] = true;
 		$_SESSION['dachi_expires'] = time() + 10;
 
-    $status = session_status();
-    if($status == PHP_SESSION_ACTIVE) {
-  		session_regenerate_id(false);
+		$status = session_status();
+		if($status == PHP_SESSION_ACTIVE) {
+			session_regenerate_id(false);
 
-  		$new_session = session_id();
-  		session_write_close();
+			$new_session = session_id();
+			session_write_close();
 
-  		session_id($new_session);
-  		self::session_start();
-    }
+			session_id($new_session);
+			self::session_start();
+		}
 
 		unset($_SESSION['dachi_closed']);
 		unset($_SESSION['dachi_expires']);
