@@ -54,9 +54,10 @@ class Session {
 			$_SESSION = array();
 			$_SESSION['dachi_agent'] = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
 			self::regenerate();
-		} else if (mt_rand(1, 100) <= 10) {
-			self::regenerate();
 		}
+		// else if (mt_rand(1, 100) <= 10) {
+		//	self::regenerate();
+		//}
 	}
 
 	/**
