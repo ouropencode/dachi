@@ -105,11 +105,11 @@ class Session {
 	/**
 	 * Regenerate the session for security
 	 *
-	 * There is a 5% random chance on any page request that the session ID will be regenerated
+	 * There is a 10% random chance on any page request that the session ID will be regenerated
 	 * and a new session identity served to the user. This prevents static session IDs that
 	 * can be stolen and reused.
 	 *
-	 * This method sets the old session to expire in 10 seconds. This allows for any pending
+	 * This method sets the old session to expire in 60 seconds. This allows for any pending
 	 * requests to be served before the session ID changes.
 	 *
 	 * @return null
@@ -119,7 +119,7 @@ class Session {
 			return false;
 
 		$_SESSION['dachi_closed'] = true;
-		$_SESSION['dachi_expires'] = time() + 10;
+		$_SESSION['dachi_expires'] = time() + 60;
 
 		$status = session_status();
 		if($status == PHP_SESSION_ACTIVE) {
