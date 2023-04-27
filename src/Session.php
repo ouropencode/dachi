@@ -54,10 +54,9 @@ class Session {
 			$_SESSION = array();
 			$_SESSION['dachi_agent'] = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
 			self::regenerate();
+		} else if (mt_rand(1, 100) <= 10) {
+			self::regenerate();
 		}
-		// else if (mt_rand(1, 100) <= 10) {
-		//	self::regenerate();
-		//}
 	}
 
 	/**
@@ -144,16 +143,16 @@ class Session {
 		session_set_cookie_params($lifetime, self::$path, self::$domain, self::$https);
 		session_name($name);
 
-    $status = session_status();
-    if ($status == PHP_SESSION_DISABLED) {
-      throw new Exception("sessions are disabled");
-    } else if($status == PHP_SESSION_NONE) {
-      if(session_start() == false)
-        throw new Exception("failed to start session");
-      return true;
-    }
+		$status = session_status();
+		if ($status == PHP_SESSION_DISABLED) {
+			throw new Exception("sessions are disabled");
+		} else if($status == PHP_SESSION_NONE) {
+			if(session_start() == false)
+				throw new Exception("failed to start session");
+			return true;
+		}
 
-    return false;
+		return false;
 	}
 
 }
